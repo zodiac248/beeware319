@@ -1,0 +1,12 @@
+mysql:
+  image: mysql
+  ports:
+    - "3306:3306"
+  expose:
+    - "3306"
+  environment:
+    - MYSQL_USER=ppuser
+    - MYSQL_PASSWORD=Password
+    - MYSQL_DATABASE=db_panpal
+  volumes:
+    - "./conf.d:/etc/mysql/conf.d:ro"
