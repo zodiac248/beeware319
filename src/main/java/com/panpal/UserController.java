@@ -20,7 +20,7 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import java.util.Optional;
 
-@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
+@CrossOrigin(origins = "http://beeware319-front.herokuapp.com")
 @RestController
 @RequestMapping(path="/user")
 public class UserController {

@@ -26,7 +26,7 @@ import java.text.ParseException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
+@CrossOrigin(origins = "http://beeware319-front.herokuapp.com")
 @RestController
 @RequestMapping(path="/floor")
 public class FloorController {

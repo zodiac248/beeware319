@@ -21,7 +21,7 @@ public class MainApplication {
 				registry.addMapping("/**")
 						.allowedHeaders("*")
 						.allowedMethods("*")
-						.allowedOrigins("https://beeware319-front.herokuapp.com")
+						.allowedOrigins("http://beeware319-front.herokuapp.com")
 						.allowCredentials(true);
 			}
 	 	};
