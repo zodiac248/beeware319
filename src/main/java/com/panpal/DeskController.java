@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.panpal.RequestInfo;
 
-@CrossOrigin(origins = "http://beeware319-front.herokuapp.com")
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping(path="/desk")
 public class DeskController {
