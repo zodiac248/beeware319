@@ -21,7 +21,7 @@ import java.util.Iterator;
 import java.text.ParseException;
 import org.json.simple.JSONObject;
 
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
 @RequestMapping(path="/booking")
 public class BookingController {

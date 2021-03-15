@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $.ajax({
-        url: "http://localhost:3000/greeting"
+        url: "https://beeware319-front.herokuapp.com/greeting"
     }).then(function(data, status, jqxhr) {
        $('.greeting-id').append(data.id);
        $('.greeting-content').append(data.content);

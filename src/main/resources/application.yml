@@ -18,5 +18,5 @@ spring:
           azure:
             client-id: 4ff64c65-d09a-4ed1-ac50-20b5283e8a41
             client-secret: ~P.Cn-~G6iY9LZX3F3xEKP89r4I22hh3~Q
-            redirect_uri: http://localhost:8080/login/oauth2/code/
+            redirect_uri: https://beeware319.herokuapp.com/login/oauth2/code/
 
