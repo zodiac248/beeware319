@@ -19,13 +19,12 @@ public class MainApplication {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-						.allowedHeaders("Access-Control-Allow-Headers", "Access-Control-Allow-Origin","Access-Control-Request-Method", "Access-Control-Request-Headers", "Origin"
-								,"Cache-Control", "Content-Type")
-						.allowedMethods("GET","POST","PUT","DELETE","HEAD","OPTIONS")
+						.allowedHeaders("*")
+						.allowedMethods("*")
 						.allowedOrigins("https://beeware319-front.herokuapp.com")
 						.allowCredentials(true);
 			}
-		};
+	 	};
 	 }
 
 }
