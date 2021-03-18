@@ -28,7 +28,7 @@ import org.json.simple.JSONObject;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
-@RequestMapping(path="/floor")
+@RequestMapping(path="/api/floor")
 public class FloorController {
 	@Autowired
 	private FloorRepository floorRepository;

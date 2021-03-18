@@ -22,7 +22,7 @@ import java.util.Optional;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
-@RequestMapping(path="/user")
+@RequestMapping(path="/api/user")
 public class UserController {
 	@Autowired
 	private UserRepository userRepository;

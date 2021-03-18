@@ -16,7 +16,7 @@ import com.panpal.RequestInfo;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
-@RequestMapping(path="/desk")
+@RequestMapping(path="/api/desk")
 public class DeskController {
 	@Autowired
 	private DeskRepository deskRepository;

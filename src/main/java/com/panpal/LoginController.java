@@ -11,7 +11,7 @@ import javax.servlet.http.HttpSession;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
-@RequestMapping(path="/")
+@RequestMapping(path="/api/")
 public class LoginController {
     @RequestMapping("/")
     public ModelAndView helloWorld() {

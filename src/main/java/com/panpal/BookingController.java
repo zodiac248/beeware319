@@ -23,7 +23,7 @@ import org.json.simple.JSONObject;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
-@RequestMapping(path="/booking")
+@RequestMapping(path="/api/booking")
 public class BookingController {
 	@Autowired
 	private BookingRepository bookingRepository;
