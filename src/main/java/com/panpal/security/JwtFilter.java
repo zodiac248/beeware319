@@ -1,7 +1,6 @@
 package com.panpal.security;
 
-import com.panpal.User;
-import com.panpal.security.JwtUtil;
+import com.panpal.User.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
