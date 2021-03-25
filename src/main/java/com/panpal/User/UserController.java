@@ -1,10 +1,6 @@
 package com.panpal.User;
 
-import com.panpal.security.JwtUtil;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -123,8 +119,8 @@ public class UserController {
 
 
 	@GetMapping("/userinfo")
-	public Authentication getAccount() {
-		return SecurityContextHolder.getContext().getAuthentication();
+	public boolean getAccount() {
+		return true;
   	}	
 //	@GetMapping
 //	public User getUser(@RequestParam Integer id) {
