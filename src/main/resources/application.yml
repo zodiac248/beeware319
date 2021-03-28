@@ -1,7 +1,8 @@
 azure:
   activedirectory:
     tenant-id: 7ebaa813-a477-4a79-b4e0-281ccec06ba8
-    active-directory-groups: group1
+    client-id: 4ff64c65-d09a-4ed1-ac50-20b5283e8a41
+    client-secret: ~P.Cn-~G6iY9LZX3F3xEKP89r4I22hh3~Q
 
 spring:
   jpa:
