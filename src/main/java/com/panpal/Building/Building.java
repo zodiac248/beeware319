@@ -1,13 +1,22 @@
 package com.panpal.Building;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.UniqueConstraint;
 
 import java.util.Objects;
 
 @Entity // This tells Hibernate to make a table out of this class
+@Table(
+	name = "building",
+	uniqueConstraints = {
+		@UniqueConstraint(columnNames={"name"}),
+		@UniqueConstraint(columnNames={"address"})
+	}
+)
 public class Building {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

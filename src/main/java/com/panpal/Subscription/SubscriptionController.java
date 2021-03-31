@@ -16,7 +16,7 @@ import com.panpal.RequestInfo;
 import com.panpal.Topic.TopicRepository;
 import com.panpal.Topic.Topic;
 
-@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
+@CrossOrigin(origins = "https://beeware319-front.azurewebsites.nethttps://beeware319-front.azurewebsites.net")
 @RestController
 @RequestMapping(path="/subscription")
 public class SubscriptionController {

@@ -1,23 +1,25 @@
 azure:
   activedirectory:
-    tenant-id: 7ebaa813-a477-4a79-b4e0-281ccec06ba8
-    client-id: 4ff64c65-d09a-4ed1-ac50-20b5283e8a41
-    client-secret: ~P.Cn-~G6iY9LZX3F3xEKP89r4I22hh3~Q
+    tenant-id: a4cb2b53-8d8a-427c-8ba5-bf86b999db4c
+    active-directory-groups: group1
 
 spring:
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL55Dialect
   datasource:
-    url: jdbc:mysql://us-cdbr-east-03.cleardb.com:3306/heroku_ca43daed6cbe877
-    username: b316566d750994
-    password: c73f98d0
+    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/db_panpal?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=America/Vancouver
+    username: ppuser
+    password: Password
   security:
     oauth2:
       client:
         registration:
           azure:
-            client-id: 4ff64c65-d09a-4ed1-ac50-20b5283e8a41
-            client-secret: ~P.Cn-~G6iY9LZX3F3xEKP89r4I22hh3~Q
-            redirect_uri: https://beeware319.herokuapp.com/login/oauth2/code/
+            client-id: 7e5767e2-680a-4b9d-8e6e-17097ce6f204
+            client-secret: dtZWOq.4H9G.id5NirKm4sq1i-M7I0-o~C
+            redirect_uri: https://beeware319.azurewebsites.net
 

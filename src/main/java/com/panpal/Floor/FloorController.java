@@ -1,6 +1,12 @@
 package com.panpal.Floor;
 
+import com.panpal.Error.BuildingNoLongerExistsException;
+import com.panpal.Error.DuplicateDeskException;
+import com.panpal.Error.DuplicateFloorException;
+import com.panpal.Error.FloorNoLongerExists;
+import com.panpal.ResultController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +37,7 @@ import java.text.ParseException;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
+@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
 @RestController
 @RequestMapping(path="/floor")
 public class FloorController {
@@ -43,6 +49,7 @@ public class FloorController {
 	private BookingRepository bookingRepository;
 	@Autowired
 	private BuildingRepository buildingRepository;
+	private ResultController resultController = new ResultController();
 
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -50,115 +57,144 @@ public class FloorController {
 	// public String addNewFloor (@RequestBody Integer floorNumber
 	// , @RequestParam Integer buildingId
 	// , @RequestParam String deskIds) {
-	public String addNewFloor (@RequestBody RequestInfo info) {
-		Integer floorNumber = info.getFloorNumber();
-		Integer buildingId = info.getBuildingId();
-		Building building = buildingRepository.findBuildingById(buildingId);
-		String deskNumbers = info.getDeskNumbers();
-		String imageUrl = info.getImageUrl();
+	public ResponseEntity<String> addNewFloor (@RequestBody RequestInfo info) {
+		try {
+			Integer floorNumber = info.getFloorNumber();
+			Integer buildingId = info.getBuildingId();
+			Building building = buildingRepository.findBuildingById(buildingId);
+			if (building == null) {
+				throw new BuildingNoLongerExistsException("Building with id=" + buildingId + " does not exist");
+			}
+			String deskNumbers = info.getDeskNumbers();
+			String imageUrl = info.getImageUrl();
 
-		Floor n = new Floor();
-		n.setFloorNumber(floorNumber);
-		n.setBuilding(building);
-		n.setImageUrl(imageUrl);
-		floorRepository.save(n);
+			Floor n = new Floor();
+			n.setFloorNumber(floorNumber);
+			n.setBuilding(building);
+			n.setImageUrl(imageUrl);
+			try{
+				floorRepository.save(n);
+			} catch (Exception e) {
+				throw new DuplicateFloorException("the floor with floor number "+floorNumber+" and buildingid "+buildingId+" already exists");
+			}
+			if (deskNumbers != null) {
+				List<String> desks = new LinkedList<String>(Arrays.asList(deskNumbers.split("[ ]*,[ ]*")));
+				Integer floorId = n.getId();
 
-		if (deskNumbers != null) {
-			List<String> desks = new LinkedList<String>(Arrays.asList(deskNumbers.split("[ ]*,[ ]*")));
-			Integer floorId = n.getId();
-			
-			for (int i=0; i < desks.size(); i++) {
-				if (desks.get(i) != null) {
-					Desk d = new Desk();
-					d.setDeskNumber(desks.get(i));
-					d.setFloor(n);
-					deskRepository.save(d);
+				for (int i=0; i < desks.size(); i++) {
+					if (desks.get(i) != null) {
+						Desk d = new Desk();
+						d.setDeskNumber(desks.get(i));
+						d.setFloor(n);
+						try {
+							deskRepository.save(d);
+						} catch (Exception e) {
+							throw new DuplicateDeskException("the desk with desk number "+d.getDeskNumber()+" and floor id "+ n.getId()+" already exists");
+						}
+					}
 				}
 			}
-		}
 
-		return "Floor Saved";
+			return resultController.handleSuccess("Floor Saved");
+		} catch (Exception e) {
+			return resultController.handleError(e);
+		}
 	}
 
 	@PutMapping
 	// public String updateFloor (@RequestParam Integer id
 	// , @RequestParam(required = false) Integer floorNumber
 	// , @RequestParam(required = false) Integer buildingId) {
-	public String updateFloor (@RequestBody RequestInfo info) {
-		Integer id = info.getId();
-		Integer floorNumber = info.getFloorNumber();
-		Integer buildingId = info.getBuildingId();
-		String deskNumbers = info.getDeskNumbers();
-		String imageUrl = info.getImageUrl();
+	public ResponseEntity<String> updateFloor (@RequestBody RequestInfo info) {
+		try {
+			Integer id = info.getId();
+			Integer floorNumber = info.getFloorNumber();
+			Integer buildingId = info.getBuildingId();
+			String deskNumbers = info.getDeskNumbers();
+			String imageUrl = info.getImageUrl();
 
-		Floor n = floorRepository.findFloorById(id);
-		
-		if (n == null) {
-			return "Floor with id=" + id + " does not exist";
-		}
-		
-		if (floorNumber != null) {
-			n.setFloorNumber(floorNumber);
-		}
-		if (buildingId != null) {
-			Building building = buildingRepository.findBuildingById(buildingId);
-			n.setBuilding(building);
-		}
-		if (imageUrl != null) {
-			n.setImageUrl(imageUrl);
-		}
-		floorRepository.save(n);
+			Floor n = floorRepository.findFloorById(id);
 
-		if (deskNumbers != null) {
-			List<String> desks = new LinkedList<String>(Arrays.asList(deskNumbers.split("[ ]*,[ ]*")));
-			Integer floorId = n.getId();
+			if (n == null) {
+				throw new FloorNoLongerExists("Floor with id=" + id + " does not exist") ;
+			}
 
-			Iterable<Desk> existingDesks = deskRepository.findByFloor(n);
-			Iterator<Desk> existingDesksIterator = existingDesks.iterator();
-			while (existingDesksIterator.hasNext()) {
-				Desk currentDesk = existingDesksIterator.next();
-				if (desks.contains(currentDesk.getDeskNumber())) {
-					desks.remove(currentDesk.getDeskNumber());
-				} else {
-					// if (null == bookingRepository.findByDesk(currentDesk)) {
+			if (floorNumber != null) {
+				n.setFloorNumber(floorNumber);
+			}
+			if (buildingId != null) {
+				Building building = buildingRepository.findBuildingById(buildingId);
+				if (building == null) {
+					throw new BuildingNoLongerExistsException("Building with id=" + buildingId + " does not exist");
+				}
+				n.setBuilding(building);
+			}
+			if (imageUrl != null) {
+				n.setImageUrl(imageUrl);
+			}
+			try{
+				floorRepository.save(n);
+			} catch (Exception e) {
+				throw new DuplicateFloorException("the floor with floor number "+floorNumber+" and buildingid "+buildingId+" already exists");
+			}
+			if (deskNumbers != null) {
+				List<String> desks = new LinkedList<String>(Arrays.asList(deskNumbers.split("[ ]*,[ ]*")));
+				Integer floorId = n.getId();
+
+				Iterable<Desk> existingDesks = deskRepository.findByFloor(n);
+				Iterator<Desk> existingDesksIterator = existingDesks.iterator();
+				while (existingDesksIterator.hasNext()) {
+					Desk currentDesk = existingDesksIterator.next();
+					if (desks.contains(currentDesk.getDeskNumber())) {
+						desks.remove(currentDesk.getDeskNumber());
+					} else {
+						// if (null == bookingRepository.findByDesk(currentDesk)) {
 						deskRepository.delete(currentDesk);
-					// } else {
-					// 	return "Booking exists for desk with id=" + currentDesk.getDeskNumber();
-					// }
+						// } else {
+						// 	return "Booking exists for desk with id=" + currentDesk.getDeskNumber();
+						// }
+					}
+				}
+
+				for (int i=0; i < desks.size(); i++) {
+					if (desks.get(i) != null) {
+						Desk d = new Desk();
+						d.setDeskNumber(desks.get(i));
+						d.setFloor(n);
+						deskRepository.save(d);
+					}
 				}
 			}
 
-			for (int i=0; i < desks.size(); i++) {
-				if (desks.get(i) != null) {
-					Desk d = new Desk();
-					d.setDeskNumber(desks.get(i));
-					d.setFloor(n);
-					deskRepository.save(d);
-				}
-			}
+			return resultController.handleSuccess("Floor Updated");
+		} catch (Exception e) {
+			return resultController.handleError(e);
 		}
 
-		return "Floor Updated";
 	}
 
 	@DeleteMapping
 	// public String deleteFloor (@RequestParam Integer id) {
-	public String deleteFloor (@RequestBody RequestInfo info) {
-		Integer id = info.getId();
-		
-		Floor n = floorRepository.findFloorById(id);
-		
-		if (n == null) {
-			return "Floor does not exist";
-		}
-		
-		Iterator<Desk> deskIterator = deskRepository.findByFloor(n).iterator();
-		while (deskIterator.hasNext()) {
-			deskRepository.delete(deskIterator.next());
-		}
+	public ResponseEntity<String> deleteFloor (@RequestBody RequestInfo info) {
+		try {
+			Integer id = info.getId();
 
-		floorRepository.delete(n);
-		return "Floor Deleted";
+			Floor n = floorRepository.findFloorById(id);
+
+			if (n == null) {
+				throw new FloorNoLongerExists("Floor with id=" + id + " does not exist");
+			}
+
+			Iterator<Desk> deskIterator = deskRepository.findByFloor(n).iterator();
+			while (deskIterator.hasNext()) {
+				deskRepository.delete(deskIterator.next());
+			}
+
+			floorRepository.delete(n);
+			return resultController.handleSuccess("Floor Deleted");
+		} catch (Exception e) {
+			return resultController.handleError(e);
+		}
 	}
 
 	@GetMapping(path="/all")

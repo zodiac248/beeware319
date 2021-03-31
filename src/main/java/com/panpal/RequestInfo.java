@@ -61,6 +61,22 @@ public class RequestInfo {
 	
 	private String code;
 
+	private Integer mailId;
+
+	private String phoneNumber;
+
+	private String status;
+
+	private String feedback;
+
+	private String instructions;
+
+	private String type;
+
+	private String completionDate;
+
+	private Integer requestId;
+
 
 	public Integer getId() {
 		return id;
@@ -168,5 +184,37 @@ public class RequestInfo {
 
 	public String getCode() {
 		return code;
+	}
+
+	public Integer getMailId() {
+		return mailId;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public String getFeedback() {
+		return feedback;
+	}
+
+	public String getInstructions() {
+		return instructions;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public String getCompletionDate() {
+		return completionDate;
+	}
+
+	public Integer getRequestId() {
+		return requestId;
 	}
 }

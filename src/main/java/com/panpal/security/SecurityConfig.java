@@ -1,20 +1,26 @@
 package com.panpal.security;
 
-import com.azure.spring.aad.webapp.AADWebSecurityConfigurerAdapter;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+import javax.annotation.Resource;
+
+
 @EnableWebSecurity
-public class SecurityConfig extends AADWebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //    @Resource
+//    @Resource
 //    private AccessDeniedHandler accessDeniedHandler;
 //    @Resource
 //    private JwtFilter jwtFilter;
@@ -36,9 +42,7 @@ public class SecurityConfig extends AADWebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring().antMatchers(HttpMethod.POST, "/users/login");
-        web.ignoring().antMatchers(HttpMethod.GET, "/user/search");
-        web.ignoring().antMatchers(HttpMethod.GET, "/api/user/search");
-
+//        web.ignoring().antMatchers(HttpMethod.GET, "/users/userinfo");
     }
 
 

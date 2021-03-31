@@ -19,7 +19,7 @@ import com.panpal.Posting.Posting;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
+@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
 @RestController
 @RequestMapping(path="/notification")
 public class NotificationController {

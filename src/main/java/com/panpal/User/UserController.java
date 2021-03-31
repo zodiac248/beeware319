@@ -1,6 +1,10 @@
 package com.panpal.User;
 
-
+import com.panpal.security.JwtUtil;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.panpal.RequestInfo;
 import java.util.Optional;
 
-@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
+@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
 @RestController
 @RequestMapping(path="/user")
 public class UserController {
@@ -119,8 +123,8 @@ public class UserController {
 
 
 	@GetMapping("/userinfo")
-	public boolean getAccount() {
-		return true;
+	public Authentication getAccount() {
+		return SecurityContextHolder.getContext().getAuthentication();
   	}	
 //	@GetMapping
 //	public User getUser(@RequestParam Integer id) {

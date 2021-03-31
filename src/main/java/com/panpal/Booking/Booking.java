@@ -1,16 +1,18 @@
 package com.panpal.Booking;  
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 import java.util.Date;
 
 import com.panpal.Desk.Desk;
 
 @Entity
+@Table(
+		name = "booking",
+		uniqueConstraints = {
+				@UniqueConstraint(columnNames={"desk_id","date"})
+		}
+)
 public class Booking {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

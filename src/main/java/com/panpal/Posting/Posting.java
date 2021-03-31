@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 
 import java.util.Date;
@@ -27,6 +28,7 @@ public class Posting {
 
 	private Integer likes;
 
+	@Column(columnDefinition = "varchar(1024) default ''")
 	private String content;
 
 	public Integer getId() {
