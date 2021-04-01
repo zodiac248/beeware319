@@ -21,5 +21,5 @@ spring:
           azure:
             client-id: 7e5767e2-680a-4b9d-8e6e-17097ce6f204
             client-secret: dtZWOq.4H9G.id5NirKm4sq1i-M7I0-o~C
-            redirect_uri: https://beeware319be.azurewebsites.net/login/oauth2/code/
+            redirect_uri: https://beeware319be.azurewebsites.net/login/oauth2/code/azure
 
