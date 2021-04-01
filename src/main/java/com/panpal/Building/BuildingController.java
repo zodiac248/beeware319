@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.panpal.RequestInfo;
 import com.panpal.ResultController;
 
-@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
 @RestController
 @RequestMapping(path="/building")
 public class BuildingController {

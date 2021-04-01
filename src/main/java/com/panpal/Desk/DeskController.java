@@ -22,7 +22,7 @@ import com.panpal.RequestInfo;
 import com.panpal.Floor.FloorRepository;
 import com.panpal.Floor.Floor;
 
-@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
 @RestController
 @RequestMapping(path="/desk")
 public class DeskController {

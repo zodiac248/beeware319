@@ -22,7 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import com.panpal.RequestInfo;
 import java.util.Optional;
 
-@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
 @RestController
 @RequestMapping(path="/user")
 public class UserController {

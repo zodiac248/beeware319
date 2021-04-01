@@ -21,7 +21,7 @@ public class MainApplication {
 				registry.addMapping("/**")
 						.allowedHeaders("*")
 						.allowedMethods("*")
-						.allowedOrigins("https://beeware319-front.azurewebsites.net")
+						.allowedOrigins("https://beeware319fe.azurewebsites.net")
 						.allowCredentials(true);
 			}
 	 	};

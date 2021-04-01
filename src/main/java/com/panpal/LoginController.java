@@ -9,18 +9,18 @@ import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpSession;
 
-@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
 @RestController
 @RequestMapping(path="/")
 public class LoginController {
     @RequestMapping("/")
     public ModelAndView helloWorld() {
-        return  new ModelAndView(new RedirectView("https://beeware319-front.azurewebsites.net/"));
+        return  new ModelAndView(new RedirectView("https://beeware319fe.azurewebsites.net/"));
     }
 
     @RequestMapping("/logout")
     public ModelAndView loginOut(HttpSession session){
       session.invalidate();
-      return  new ModelAndView(new RedirectView("https://beeware319-front.azurewebsites.net/"));
+      return  new ModelAndView(new RedirectView("https://beeware319fe.azurewebsites.net/"));
   }
 }

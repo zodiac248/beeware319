@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
 @RestController
 @RequestMapping(path="/posting")
 public class PostingController {

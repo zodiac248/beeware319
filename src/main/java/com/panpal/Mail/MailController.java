@@ -24,7 +24,7 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
 
-@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
 @RestController
 @RequestMapping(path="/mail")
 public class MailController {
