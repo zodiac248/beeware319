@@ -29,7 +29,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.text.ParseException;
 
-@CrossOrigin(origins = "https://beeware319-front.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319be.azurewebsites.net")
 @RestController
 @RequestMapping(path="/booking")
 public class BookingController {
