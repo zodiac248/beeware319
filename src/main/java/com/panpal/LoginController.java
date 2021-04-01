@@ -15,12 +15,12 @@ import javax.servlet.http.HttpSession;
 public class LoginController {
     @RequestMapping("/")
     public ModelAndView helloWorld() {
-        return  new ModelAndView(new RedirectView("https://beeware319fe.azurewebsites.net/"));
+        return  new ModelAndView(new RedirectView("http://localhost:3000/"));
     }
 
     @RequestMapping("/logout")
     public ModelAndView loginOut(HttpSession session){
       session.invalidate();
-      return  new ModelAndView(new RedirectView("https://beeware319fe.azurewebsites.net/"));
+      return  new ModelAndView(new RedirectView("http://localhost:3000/"));
   }
 }
