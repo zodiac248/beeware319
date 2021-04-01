@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy JAR app to Azure Web App - beeware319be
+name: Build and deploy WAR app to Azure Web App - beeware319be
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
     - uses: actions/checkout@v2
@@ -28,10 +28,10 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: java-app
-        path: '${{ github.workspace }}/target/*.jar'
+        path: '${{ github.workspace }}/target/*.war'
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build
     environment:
       name: 'production'
@@ -49,5 +49,5 @@ jobs:
       with:
         app-name: 'beeware319be'
         slot-name: 'production'
-        publish-profile: ${{ secrets.AzureAppService_PublishProfile_920391fcfb694749b40f8ab0277ec8fe }}
-        package: '*.jar'
+        publish-profile: ${{ secrets.AzureAppService_PublishProfile_38babfb847704c8490e73da6c9c7a5eb }}
+        package: '*.war'
