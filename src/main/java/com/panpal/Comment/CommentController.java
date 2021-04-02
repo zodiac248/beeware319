@@ -19,7 +19,7 @@ import com.panpal.Posting.Posting;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
-@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
 @RequestMapping(path="/comment")
 public class CommentController {

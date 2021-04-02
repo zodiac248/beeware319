@@ -1,16 +1,14 @@
 package com.panpal.Desk;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 import com.panpal.Floor.Floor;
 
 @Entity
-@Table(
-		name = "desk",
-		uniqueConstraints = {
-				@UniqueConstraint(columnNames={"deskNumber","floor_id"})
-		}
-)
 public class Desk {
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

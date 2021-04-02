@@ -1,9 +1,6 @@
 package com.panpal.Booking;
 
-import com.panpal.Error.*;
-import com.panpal.ResultController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,13 +9,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.panpal.RequestInfo;
 import com.panpal.Desk.DeskRepository;
 import com.panpal.Desk.Desk;
 import com.panpal.Floor.FloorRepository;
+import com.panpal.Floor.Floor;
 import com.panpal.Building.BuildingRepository;
+import com.panpal.Building.Building;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,8 +28,9 @@ import java.util.Calendar;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.text.ParseException;
+import org.json.simple.JSONObject;
 
-@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
 @RequestMapping(path="/booking")
 public class BookingController {
@@ -41,138 +42,104 @@ public class BookingController {
 	private FloorRepository floorRepository;
 	@Autowired
 	private BuildingRepository buildingRepository;
-	private ResultController resultController = new ResultController();
 
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
 	@PostMapping
-	public ResponseEntity<String> addNewBooking (@RequestBody RequestInfo info) {
-		try {
-			Integer deskId = info.getDeskId();
-			Desk desk = deskRepository.findDeskById(deskId);
-			if (desk == null) {
-				throw new DeskNoLongerExistsException();
-			}
-			String email = info.getEmail();
-			String date = info.getDate();
-			Date dateObj = new Date();
+	public String addNewBooking (@RequestBody RequestInfo info) {
+		Integer deskId = info.getDeskId();
+		Desk desk = deskRepository.findDeskById(deskId);
+		String email = info.getEmail();
+		String date = info.getDate();
+		Date dateObj = new Date();
+		try {  
+			dateObj = dateFormatter.parse(date);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}		
+		Integer range = info.getRange();
 
-			try {
+		Date currentDate = new Date();
+		Calendar c = Calendar.getInstance();
+		c.setTime(currentDate);
+		c.add(Calendar.MONTH, 6);
+		Date farthestDate = c.getTime();
+		LocalDate dateBefore = LocalDate.parse(dateFormatter.format(dateObj));
+		LocalDate dateAfter = LocalDate.parse(dateFormatter.format(farthestDate));
+		Long acceptableRangeLong = ChronoUnit.DAYS.between(dateBefore, dateAfter);
+		Integer acceptableRange = acceptableRangeLong.intValue();
+
+		if (range == 1) {
+			Booking n = new Booking();
+			n.setDesk(desk);
+			n.setEmail(email);
+			n.setDate(dateObj);
+			bookingRepository.save(n);
+			return "Booking Saved";
+		} else if (range <= acceptableRange) {
+			for (int i=0; i<range; i++) {
+				Booking b = new Booking();
+				b.setDesk(desk);
+				b.setEmail(email);
+				c.setTime(dateObj);
+				c.add(Calendar.DATE, i);
+				Date d = c.getTime();
+				b.setDate(d);
+				bookingRepository.save(b);
+			}
+			return "Bookings Saved";
+		} else {
+			return "Booking range exceeded the 6 month allowed period";
+		}
+	}
+
+	@PutMapping
+	public String updateBooking (@RequestBody RequestInfo info) {
+		Integer id = info.getId();
+		Integer deskId = info.getDeskId();
+		String email = info.getEmail();
+		String date = info.getDate();
+
+		Date dateObj = new Date();
+		if (date != null) {
+			try {  
 				dateObj = dateFormatter.parse(date);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
-			Integer range = info.getRange();
-
-			Date currentDate = new Date();
-			Calendar c = Calendar.getInstance();
-			c.setTime(currentDate);
-			c.add(Calendar.MONTH, 6);
-			Date farthestDate = c.getTime();
-			LocalDate dateBefore = LocalDate.parse(dateFormatter.format(dateObj));
-			LocalDate dateAfter = LocalDate.parse(dateFormatter.format(farthestDate));
-			Long acceptableRangeLong = ChronoUnit.DAYS.between(dateBefore, dateAfter);
-			Integer acceptableRange = acceptableRangeLong.intValue();
-
-			if (range == 1) {
-				Booking n = new Booking();
-				n.setDesk(desk);
-				n.setEmail(email);
-				n.setDate(dateObj);
-				try{
-					bookingRepository.save(n);
-				}catch (Exception e) {
-					throw new BookingNotAvailableException("the booking with the desk number "+ n.getDesk().getDeskNumber()+" in floor "+n.getDesk().getFloor().getFloorNumber()+"in the "+ n.getDesk().getFloor().getBuilding().getName()+"has already been reserved");
-				}
-				return resultController.handleSuccess("booking Saved");
-			} else if (range <= acceptableRange) {
-				for (int i=0; i<range; i++) {
-					Booking b = new Booking();
-					b.setDesk(desk);
-					b.setEmail(email);
-					c.setTime(dateObj);
-					c.add(Calendar.DATE, i);
-					Date d = c.getTime();
-					b.setDate(d);
-					try{
-						bookingRepository.save(b);
-					}catch (Exception e) {
-						throw new BookingNotAvailableException("the booking with the desk number "+ b.getDesk().getDeskNumber()+" in floor "+b.getDesk().getFloor().getFloorNumber()+"in the "+ b.getDesk().getFloor().getBuilding().getName()+"has already been reserved");
-					}
-				}
-				return resultController.handleSuccess("booking Saved");
-			} else {
-				throw new ExceedRangeException();
-			}
-
-
-		} catch (Exception e){
-			return resultController.handleError(e);
 		}
 
-	}
-
-	@PutMapping
-	public ResponseEntity<String> updateBooking (@RequestBody RequestInfo info) {
-		try {
-			Integer id = info.getId();
-			Integer deskId = info.getDeskId();
-			String email = info.getEmail();
-			String date = info.getDate();
-
-			Date dateObj = new Date();
-			if (date != null) {
-				try {
-					dateObj = dateFormatter.parse(date);
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-			}
-
-			Booking n = bookingRepository.findBookingById(id);
-
-			if (n == null) {
-				throw new BookingNotExistsException("Booking does not exist");
-			}
-
-			if (deskId != null) {
-				Desk desk = deskRepository.findDeskById(deskId);
-				if (desk == null) {
-					throw new DeskNoLongerExistsException();
-				}
-				n.setDesk(desk);
-			}
-			if (email != null) {
-				n.setEmail(email);
-			}
-			if (date != null) {
-				n.setDate(dateObj);
-			}
-			try{
-				bookingRepository.save(n);
-			}catch (Exception e) {
-				throw new BookingNotAvailableException("the booking with the desk number "+ n.getDesk().getDeskNumber()+" in floor "+n.getDesk().getFloor().getFloorNumber()+"in the "+ n.getDesk().getFloor().getBuilding().getName()+"has already been reserved");
-			}
-			return resultController.handleSuccess("booking Updated");
-		} catch (Exception e){
-			return resultController.handleError(e);
+		Booking n = bookingRepository.findBookingById(id);
+		
+		if (n == null) {
+			return "Booking does not exist";
 		}
+		
+		if (deskId != null) {
+			Desk desk = deskRepository.findDeskById(deskId);
+			n.setDesk(desk);
+		}
+		if (email != null) {
+			n.setEmail(email);
+		}
+		if (date != null) {
+			n.setDate(dateObj);
+		}
+		bookingRepository.save(n);
+		return "Booking Updated";
 	}
 
 	@DeleteMapping
-	public ResponseEntity<String> deleteBooking (@RequestParam Integer id) {
-		try {
-			Booking n = bookingRepository.findBookingById(id);
-
-			if (n == null) {
-				throw new BookingNotExistsException("Booking does not exist");
-			}
-
-			bookingRepository.delete(n);
-			return resultController.handleSuccess("booking deleted");
-		} catch (Exception e) {
-			return resultController.handleError(e);
+	public String deleteBooking (@RequestParam Integer id) {
+		
+		Booking n = bookingRepository.findBookingById(id);
+		
+		if (n == null) {
+			return "Booking does not exist";
 		}
+
+		bookingRepository.delete(n);
+		return "Booking Deleted";
 	}
 
 	@GetMapping(path="/all")

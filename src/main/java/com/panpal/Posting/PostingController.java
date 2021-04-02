@@ -1,6 +1,5 @@
 package com.panpal.Posting;
 
-import com.panpal.ResultController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Iterator;
 import java.util.ArrayList;
 
-@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
 @RequestMapping(path="/posting")
 public class PostingController {
@@ -40,20 +39,16 @@ public class PostingController {
 	private NotificationRepository notificationRepository;
 
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	private ResultController resultController = new ResultController();
 
 	@PostMapping
 	public Integer addNewPosting (@RequestBody RequestInfo info) {
-		
 		String email = info.getEmail();
 		Integer topicId = info.getTopicId();
 		Topic topic = topicRepository.findTopicById(topicId);
 		Date dateObj = new Date();
 		String title = info.getTitle();
 		String content = info.getContent();
-		if (content.length()>=1024) {
-			throw new RuntimeException("content to long, should not exceed 1024 characters");
-		}
+
 		Posting n = new Posting();
 		n.setEmail(email);
 		n.setTopic(topic);

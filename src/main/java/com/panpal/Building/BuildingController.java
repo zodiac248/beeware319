@@ -1,7 +1,5 @@
 package com.panpal.Building;
 
-import com.panpal.Error.BuildingNoLongerExistsException;
-import com.panpal.Error.DuplicateBuildingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.panpal.RequestInfo;
 import com.panpal.ResultController;
 
-@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
 @RequestMapping(path="/building")
 public class BuildingController {
@@ -40,12 +38,7 @@ public class BuildingController {
 			n.setName(name);
 			n.setAddress(address);
 			n.setCode(code);
-			try{
-				buildingRepository.save(n);
-
-			} catch (Exception e) {
-				throw new DuplicateBuildingException("the name or the address of the building already exists");
-			}
+			buildingRepository.save(n);
 			return resultController.handleSuccess("Building Saved");
 		} catch (Exception e){	
 			return resultController.handleError(e);
@@ -56,56 +49,43 @@ public class BuildingController {
 	// public String updateBuilding (@RequestParam Integer id
 	// , @RequestParam(required = false) String name
 	// , @RequestParam(required = false) String address) {
-	public ResponseEntity<String> updateBuilding (@RequestBody RequestInfo info) {
-		try {
-			Building n = buildingRepository.findBuildingById(info.getId());
+	public String updateBuilding (@RequestBody RequestInfo info) {
 
-			if (n == null) {
-				throw new BuildingNoLongerExistsException("Building with id=" + info.getId() + " does not exist");
-			}
-
-			String name = info.getName();
-			String address = info.getAddress();
-			String code = info.getCode();
-			if (name != null) {
-				n.setName(name);
-			}
-			if (address != null) {
-				n.setAddress(address);
-			}
-			if (code != null) {
-				n.setCode(code);
-			}
-
-			try{
-				buildingRepository.save(n);
-
-			} catch (Exception e) {
-				new DuplicateBuildingException("the name or the address of the building already exists");
-			}
-			return resultController.handleSuccess("Building Updated");
-		} catch (Exception e) {
-			return resultController.handleError(e);
+		Building n = buildingRepository.findBuildingById(info.getId());
+		
+		if (n == null) {
+			return "Building does not exist";
+		}
+		
+		String name = info.getName();
+		String address = info.getAddress();
+		String code = info.getCode();
+		if (name != null) {
+			n.setName(name);
+		}
+		if (address != null) {
+			n.setAddress(address);
+		}
+		if (code != null) {
+			n.setCode(code);
 		}
 
+		buildingRepository.save(n);
+		return "Building Updated";
 	}
 
 	@DeleteMapping
 	// public String deleteBuilding (@RequestParam Integer id) {
-	public ResponseEntity<String> deleteBuilding (@RequestBody RequestInfo info) {
-		try {
-			Building n = buildingRepository.findBuildingById(info.getId());
-
-			if (n == null) {
-				throw new BuildingNoLongerExistsException("Building with id = "+info.getId()+" does not exist") ;
-			}
-
-			buildingRepository.delete(n);
-			return resultController.handleSuccess("Building deleted");
-
-		} catch (Exception e){
-			return resultController.handleError(e);
+	public String deleteBuilding (@RequestBody RequestInfo info) {
+		
+		Building n = buildingRepository.findBuildingById(info.getId());
+		
+		if (n == null) {
+			return "Building does not exist";
 		}
+
+		buildingRepository.delete(n);
+		return "Building Deleted";
 	}
 	@GetMapping(path="/all")
 	public Iterable<Building> getAllBuildings() {

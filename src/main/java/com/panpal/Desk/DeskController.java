@@ -1,12 +1,6 @@
 package com.panpal.Desk;
 
-import com.panpal.Error.DeskNoLongerExistsException;
-import com.panpal.Error.DeskNoLongerExistsException;
-import com.panpal.Error.DuplicateDeskException;
-import com.panpal.Error.FloorNoLongerExists;
-import com.panpal.ResultController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,7 +16,7 @@ import com.panpal.RequestInfo;
 import com.panpal.Floor.FloorRepository;
 import com.panpal.Floor.Floor;
 
-@CrossOrigin(origins = "https://beeware319fe.azurewebsites.net")
+@CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
 @RequestMapping(path="/desk")
 public class DeskController {
@@ -30,94 +24,61 @@ public class DeskController {
 	private DeskRepository deskRepository;
 	@Autowired
 	private FloorRepository floorRepository;
-	private ResultController resultController = new ResultController();
-
 
 	@PostMapping
 	// public String addNewDesk (@RequestParam String deskNumber
 	// , @RequestParam Integer floorId) {
-	public ResponseEntity<String> addNewDesk (@RequestBody RequestInfo info) {
-		try {
-			String deskNumber = info.getDeskNumber();
-			Integer floorId = info.getFloorId();
-			Floor floor = floorRepository.findFloorById(floorId);
-			if (floor == null) {
-				throw new FloorNoLongerExists("Floor with id=" + floorId + " does not exist");
-			}
-			Desk n = new Desk();
-			n.setDeskNumber(deskNumber);
-			n.setFloor(floor);
-			try {
-				deskRepository.save(n);
+	public String addNewDesk (@RequestBody RequestInfo info) {
+		String deskNumber = info.getDeskNumber();
+		Integer floorId = info.getFloorId();
+		Floor floor = floorRepository.findFloorById(floorId);
 
-			} catch (Exception e) {
-				throw new DuplicateDeskException("the desk with desk number "+n.getDeskNumber()+" and floor id "+n.getFloorId()+" already exists");
-			}
-			return resultController.handleSuccess("Desks Saved");
-
-		} catch (Exception e){
-			System.out.println(e.getCause());
-			return resultController.handleError(e);
-		}
+		Desk n = new Desk();
+		n.setDeskNumber(deskNumber);
+		n.setFloor(floor);
+		deskRepository.save(n);
+		return "Desk Saved";
 	}
 
 	@PutMapping
 	// public String updateDesk (@RequestParam Integer id
 	// , @RequestParam(required = false) String deskNumber
 	// , @RequestParam(required = false) Integer floorId) {
-	public ResponseEntity<String> updateDesk (@RequestBody RequestInfo info) {
-		try {
-			Integer id = info.getId();
-			String deskNumber = info.getDeskNumber();
-			Integer floorId = info.getFloorId();
+	public String updateDesk (@RequestBody RequestInfo info) {
+		Integer id = info.getId();
+		String deskNumber = info.getDeskNumber();
+		Integer floorId = info.getFloorId();
 
-			Desk n = deskRepository.findDeskById(id);
-			if (n == null) {
-				throw new DeskNoLongerExistsException();
-			}
-
-			if (deskNumber != null) {
-				n.setDeskNumber(deskNumber);
-			}
-			if (floorId != null) {
-				Floor floor = floorRepository.findFloorById(floorId);
-				if (floor == null) {
-					throw new FloorNoLongerExists("floor id with "+floor+"no longer exists");
-				}
-				n.setFloor(floor);
-			}
-			try {
-				deskRepository.save(n);
-
-			} catch (Exception e) {
-				throw new DuplicateDeskException("the desk with desk number "+n.getDeskNumber()+" and floor id "+n.getFloorId()+" already exists");
-			}
-			return resultController.handleSuccess("Desks Updated");
-		} catch (Exception e){
-			System.out.println(e.getCause());
-
-			return resultController.handleError(e);
+		Desk n = deskRepository.findDeskById(id);
+		
+		if (n == null) {
+			return "Desk does not exist";
 		}
+		
+		if (deskNumber != null) {
+			n.setDeskNumber(deskNumber);
+		}
+		if (floorId != null) {
+			Floor floor = floorRepository.findFloorById(floorId);
+			n.setFloor(floor);
+		}
+		deskRepository.save(n);
+		return "Desk Updated";
 	}
 
 	@DeleteMapping
 	// public String deleteDesk (@RequestParam Integer id) {
-	public ResponseEntity<String> deleteDesk (@RequestBody RequestInfo info) {
-		try {
-			Integer id = info.getId();
-
-			Desk n = deskRepository.findDeskById(id);
-
-			if (n == null) {
-				throw new DeskNoLongerExistsException();
-			}
-
-			deskRepository.delete(n);
-			return resultController.handleSuccess("Desks Deleted");
-		} catch (Exception e) {
-			return resultController.handleError(e);
+	public String deleteDesk (@RequestBody RequestInfo info) {
+		Integer id = info.getId();
+		
+		Desk n = deskRepository.findDeskById(id);
+		
+		if (n == null) {
+			return "Desk does not exist";
 		}
 
+		deskRepository.delete(n);
+		return "Desk Deleted";
 	}
 
 	@GetMapping(path="/all")
