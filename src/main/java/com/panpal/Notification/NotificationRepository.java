@@ -9,5 +9,7 @@ public interface NotificationRepository extends CrudRepository<Notification, Int
 
     Iterable<Notification> findByOrderByEmailAsc();
 
+    Iterable<Notification> findByPosting(Posting posting);
+
     Iterable<Notification> findByEmailOrderByDateDesc(String email);
 }

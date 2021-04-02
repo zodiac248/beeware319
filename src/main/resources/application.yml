@@ -7,19 +7,19 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
+    properties: 
         hibernate:
-            dialect: org.hibernate.dialect.MySQL55Dialect
+            dialect: org.hibernate.dialect.MySQL55Dialect 
   datasource:
     url: jdbc:mysql://us-cdbr-east-03.cleardb.com:3306/heroku_ca43daed6cbe877
     username: b316566d750994
     password: c73f98d0
-  security:
-    oauth2:
-      client:
-        registration:
-          azure:
-            client-id: 7e5767e2-680a-4b9d-8e6e-17097ce6f204
-            client-secret: dtZWOq.4H9G.id5NirKm4sq1i-M7I0-o~C
-            redirect_uri: https://beeware319.herokuapp.com/login/oauth2/code/
+#  security:
+#    oauth2:
+#      client:
+#        registration:
+#          azure:
+#            client-id: 4ff64c65-d09a-4ed1-ac50-20b5283e8a41
+#            client-secret: ~P.Cn-~G6iY9LZX3F3xEKP89r4I22hh3~Q
+#            redirect_uri: http://localhost:8080/login/oauth2/code/
 

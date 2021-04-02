@@ -1,5 +1,6 @@
 package com.panpal.Posting;
 
+import com.panpal.ResultController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.panpal.RequestInfo;
 import com.panpal.Topic.TopicRepository;
 import com.panpal.Topic.Topic;
+import com.panpal.Comment.CommentRepository;
+import com.panpal.Comment.Comment;
 import com.panpal.Notification.NotificationRepository;
 import com.panpal.Notification.Notification;
 import com.panpal.Subscription.SubscriptionRepository;
@@ -34,21 +37,27 @@ public class PostingController {
 	@Autowired
 	private TopicRepository topicRepository;
 	@Autowired
+	private CommentRepository commentRepository;
+	@Autowired
 	private SubscriptionRepository subscriptionRepository;
 	@Autowired
 	private NotificationRepository notificationRepository;
 
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private ResultController resultController = new ResultController();
 
 	@PostMapping
 	public Integer addNewPosting (@RequestBody RequestInfo info) {
+		
 		String email = info.getEmail();
 		Integer topicId = info.getTopicId();
 		Topic topic = topicRepository.findTopicById(topicId);
 		Date dateObj = new Date();
 		String title = info.getTitle();
 		String content = info.getContent();
-
+		if (content.length()>=1024) {
+			throw new RuntimeException("content to long, should not exceed 1024 characters");
+		}
 		Posting n = new Posting();
 		n.setEmail(email);
 		n.setTopic(topic);
@@ -138,6 +147,7 @@ public class PostingController {
 			return "Posting does not exist";
 		}
 
+		deletePostingCasc(n);
 		postingRepository.delete(n);
 		return "Posting Deleted";
 	}
@@ -172,5 +182,16 @@ public class PostingController {
 	@GetMapping(path="/byEmail")
 	public Iterable<Posting> getPostingByEmail(@RequestParam String email) {
 		return postingRepository.findByEmailOrderByDateAsc(email);
+	}
+
+	private void deletePostingCasc(Posting posting) {
+		Iterator<Comment> commentIterator = commentRepository.findByPosting(posting).iterator();
+		while (commentIterator.hasNext()) {
+			commentRepository.delete(commentIterator.next());
+		}
+		Iterator<Notification> noteIterator = notificationRepository.findByPosting(posting).iterator();
+		while (noteIterator.hasNext()) {
+			notificationRepository.delete(noteIterator.next());
+		}
 	}
 }

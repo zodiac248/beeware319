@@ -10,6 +10,8 @@ public interface CommentRepository extends CrudRepository<Comment, Integer> {
 
     Iterable<Comment> findByOrderByEmailAsc();
 
+    Iterable<Comment> findByPosting(Posting posting);
+
     Iterable<Comment> findByPostingOrderByDateAsc(Posting posting);
 
     Iterable<Comment> findByEmailOrderByDateAsc(String email);
