@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
 
@@ -37,7 +38,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
 
-                .anyRequest().authenticated().requestMatchers(CorsUtils::isPreFlightRequest).permitAll().antMatchers(HttpMethod.OPTIONS).permitAll();
+                .anyRequest().authenticated().requestMatchers(CorsUtils::isPreFlightRequest).permitAll().antMatchers(HttpMethod.OPTIONS)
+                .permitAll().and().addFilterBefore(simpleCORSFilter, ChannelProcessingFilter.class);
         httpSecurity.addFilterAt(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 //
