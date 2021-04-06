@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsUtils;
 
 import javax.annotation.Resource;
 
@@ -24,6 +25,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Resource
     private JwtFilter jwtFilter;
 
+    @Resource
+    private SimpleCORSFilter simpleCORSFilter;
+
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors().and().csrf().disable()
@@ -33,8 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .authorizeRequests()
 
-                .anyRequest().authenticated();
-
+                .anyRequest().authenticated().requestMatchers(CorsUtils::isPreFlightRequest).permitAll().antMatchers(HttpMethod.OPTIONS).permitAll();
         httpSecurity.addFilterAt(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 //
