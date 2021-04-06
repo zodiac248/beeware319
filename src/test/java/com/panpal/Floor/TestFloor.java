@@ -18,13 +18,6 @@ public class TestFloor {
 	}
 
 	@Test
-	public void testImageUrl() {
-		String sampleImageUrl = "sample/floor.png";
-		floor.setImageUrl(sampleImageUrl);
-		assertEquals(floor.getImageUrl(), sampleImageUrl);
-	}
-
-	@Test
 	public void testBuilding() {
 		Building sampleBuilding = new Building();
 		sampleBuilding.setName("ICBC - Beeware");

@@ -20,7 +20,9 @@ public class Floor {
 
 	private Integer floorNumber;
 
-	private String imageUrl;
+	@Lob
+	@Column
+	private String image;
 
 	@ManyToOne
 	private Building building;
@@ -37,12 +39,12 @@ public class Floor {
 		this.floorNumber = floorNumber;
 	}
 
-	public String getImageUrl() {
-		return imageUrl;
+	public String getImage() {
+		return image;
 	}
 
-	public void setImageUrl(String imageUrl) {
-		this.imageUrl = imageUrl;
+	public void setImage(String image) {
+		this.image = image;
 	}
 
 	public Integer getBuildingId() {
@@ -64,12 +66,12 @@ public class Floor {
 
 		Floor floor = (Floor) o;
 		return Objects.equals(floorNumber, floor.floorNumber) && 
-				Objects.equals(imageUrl, floor.imageUrl) &&
+				Objects.equals(image, floor.image) &&
 				Objects.equals(building, floor.building);	
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(floorNumber, imageUrl, building);
+		return Objects.hash(floorNumber, image, building);
 	}
 }

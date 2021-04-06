@@ -7,8 +7,4 @@ import com.panpal.Mail.Mail;
 
 public interface RequestRepository extends CrudRepository<Request, Integer> {
     Request findRequestById(Integer id);
-
-    Iterable<Request> findByOrderBySubmissionDateAsc();
-
-    Iterable<Request> findByEmailOrderBySubmissionDateAsc(String email);
 }

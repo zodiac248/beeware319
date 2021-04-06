@@ -23,10 +23,12 @@ public class Mail {
 	@OneToOne
 	private Request request;
 
-	@ManyToOne
-	private Building building;
+	private String sender;
 
 	private Date date;
+
+	@ManyToOne
+	private Building building;
 
 	private String status;
 
@@ -64,6 +66,14 @@ public class Mail {
 
 	public void setBuilding(Building building) {
 		this.building = building;
+	}
+
+	public String getSender() {
+		return sender;
+	}
+
+	public void setSender(String sender) {
+		this.sender = sender;
 	}
 
 	public Date getDate() {

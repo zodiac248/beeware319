@@ -12,7 +12,5 @@ public interface SubscriptionRepository extends CrudRepository<Subscription, Int
 
     Iterable<Subscription> findByEmailOrderByTopicAsc(String email);
 
-    Iterable<Subscription> findByTopic(Topic topic);
-
     Iterable<Subscription> findByTopicOrderByEmailAsc(Topic topic);
 }

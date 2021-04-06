@@ -188,16 +188,8 @@ public class BookingController {
 	}
 
 	@GetMapping(path="/email")
-	public ArrayList<Booking> getBookingsByEmail(@RequestParam String email) {
-		ArrayList<Booking> bookings = new ArrayList<Booking>();
-		Iterator<Booking> bookingIterator = bookingRepository.findByEmailOrderByDateAsc(email).iterator();
-		while (bookingIterator.hasNext()) {
-			Booking booking = bookingIterator.next();
-			if (booking.getDate().after(new Date())) {
-				bookings.add(booking);
-			}
-		}
-		return bookings;
+	public Iterable<Booking> getBookingsByEmail(@RequestParam String email) {
+		return bookingRepository.findByEmailOrderByDateAsc(email);
 	}
 
 	@GetMapping(path="/date")

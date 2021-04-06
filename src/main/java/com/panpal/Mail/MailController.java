@@ -40,23 +40,23 @@ public class MailController {
 	@PostMapping
 	public Integer addNewMail (@RequestBody RequestInfo info) {
 		String email = info.getEmail();
-        String status = info.getStatus();
-		Date arrivalDate = new Date();
         Integer buildingId = info.getBuildingId();
-        Integer requestId = info.getRequestId();
+		Date arrivalDate = new Date();
+		String sender = info.getSender();
 
 		Mail n = new Mail();
 		n.setEmail(email);
-        n.setStatus(status);
-        n.setDate(arrivalDate);
         if (buildingId != null) {
             Building building = buildingRepository.findBuildingById(buildingId);
             n.setBuilding(building);
         }
-        if (requestId != null) {
-            Request request = requestRepository.findRequestById(requestId);
-            n.setRequest(request);
-        }
+        n.setDate(arrivalDate);
+		n.setSender(sender);
+
+		Request request = new Request();
+		requestRepository.save(request);
+		n.setRequest(request);
+        n.setStatus("Awaiting Request");
 		mailRepository.save(n);
 
 		return n.getId();
@@ -75,6 +75,10 @@ public class MailController {
 		if (email != null) {
             n.setEmail(email);
 		}
+		String sender = info.getSender();
+		if (sender != null) {
+            n.setSender(sender);
+		}
         String status = info.getStatus();
 		if (status != null) {
             n.setStatus(status);
@@ -84,12 +88,6 @@ public class MailController {
             Building building = buildingRepository.findBuildingById(buildingId);
             n.setBuilding(building);
 		}
-        Integer requestId = info.getRequestId();
-		if (requestId != null) {
-            Request request = requestRepository.findRequestById(requestId);
-            n.setRequest(request);
-		}
-
 		mailRepository.save(n);
 		return "Mail Updated";
 	}
@@ -107,18 +105,29 @@ public class MailController {
 		return "Mail Deleted";
 	}
 
-	@GetMapping
+	@GetMapping(path="/all")
 	public Iterable<Mail> getAllMail() {
-		return mailRepository.findByOrderByDateAsc();
+		return mailRepository.findByOrderByDateDesc();
 	}
 
 	@GetMapping(path="/id")
-	public Mail getMail(@RequestParam Integer id) {
+	public Mail getMailById(@RequestParam Integer id) {
 		return mailRepository.findMailById(id);
+	}
+
+	@GetMapping(path="/byStatus")
+	public Iterable<Mail> getMailByStatus(@RequestParam String status) {
+		return mailRepository.findByStatusOrderByDateDesc(status);
 	}
 
 	@GetMapping(path="/byEmail")
 	public Iterable<Mail> getMailByEmail(@RequestParam String email) {
-		return mailRepository.findByEmailOrderByDateAsc(email);
+		return mailRepository.findByEmailOrderByDateDesc(email);
+	}
+
+	@GetMapping
+	public Iterable<Mail> getMail(@RequestParam String email
+	, @RequestParam String status) {
+		return mailRepository.findByEmailAndStatusOrderByDateDesc(email, status);
 	}
 }

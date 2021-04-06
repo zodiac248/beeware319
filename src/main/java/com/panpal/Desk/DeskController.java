@@ -18,13 +18,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Iterator;
-
 import com.panpal.RequestInfo;
 import com.panpal.Floor.FloorRepository;
 import com.panpal.Floor.Floor;
-import com.panpal.Booking.BookingRepository;
-import com.panpal.Booking.Booking;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
@@ -34,8 +30,6 @@ public class DeskController {
 	private DeskRepository deskRepository;
 	@Autowired
 	private FloorRepository floorRepository;
-	@Autowired
-	private BookingRepository bookingRepository;
 	private ResultController resultController = new ResultController();
 
 
@@ -118,7 +112,6 @@ public class DeskController {
 				throw new DeskNoLongerExistsException();
 			}
 
-			deleteDeskCasc(n);
 			deskRepository.delete(n);
 			return resultController.handleSuccess("Desks Deleted");
 		} catch (Exception e) {
@@ -137,12 +130,5 @@ public class DeskController {
 		Floor floor = floorRepository.findFloorById(floorId);
 		return deskRepository.findByFloorOrderByDeskNumberAsc(floor);
 		// return deskRepository.findByFloor(floor);
-	}
-
-	private void deleteDeskCasc(Desk desk) {
-		Iterator<Booking> bookingIterator = bookingRepository.findByDesk(desk).iterator();
-		while (bookingIterator.hasNext()) {
-			bookingRepository.delete(bookingIterator.next());
-		}
 	}
 }

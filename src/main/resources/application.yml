@@ -1,8 +1,7 @@
-azure:
-  activedirectory:
-    tenant-id: a4cb2b53-8d8a-427c-8ba5-bf86b999db4c
-    active-directory-groups: group1
-
+#azure:
+#  activedirectory:
+#    tenant-id: a4cb2b53-8d8a-427c-8ba5-bf86b999db4c
+#    active-directory-groups: group1
 spring:
   jpa:
     hibernate:

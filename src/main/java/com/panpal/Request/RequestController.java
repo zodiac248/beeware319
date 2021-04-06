@@ -21,6 +21,7 @@ import com.panpal.Mail.Mail;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.text.ParseException;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
@@ -31,34 +32,33 @@ public class RequestController {
 	@Autowired
 	private MailRepository mailRepository;
 
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
 
 	@PostMapping
 	public Integer addNewRequest (@RequestBody RequestInfo info) {
-		String email = info.getEmail();
-		String name = info.getName();
-        String phoneNumber = info.getPhoneNumber();
-        String status = info.getStatus();
-        String feedback = info.getFeedback();
-        String instructions = info.getInstructions();
-        String type = info.getType();
-		Date submissionDate = new Date();
-        Integer mailId = info.getMailId();
+        String type = info.getInstructionType();
+		String instructions = info.getInstructionDescription();
+        String completionDate = info.getRequestedCompletionDate();
+		Date dateObj = new Date();
+		try {
+			dateObj = dateFormatter.parse(completionDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		String feedback = info.getFeedback();
+		// Integer mailId = info.getMailId();
+		// Mail mail = mailRepository.findMailById(mailId);
 
 		Request n = new Request();
-		n.setEmail(email);
-        n.setName(name);
-        n.setPhoneNumber(phoneNumber);
-        n.setStatus(status);
-        n.setFeedback(feedback);
-        n.setInstructions(instructions);
-        n.setType(type);
-        n.setSubmissionDate(submissionDate);
-        if (mailId != null) {
-            Mail mail = mailRepository.findMailById(mailId);
-            n.setMail(mail);
-        }
+		n.setInstructionType(type);
+		n.setInstructionDescription(instructions);
+		n.setRequestedCompletionDate(dateObj);
+		n.setFeedback(feedback);
+		// n.setMail(mail);
 		requestRepository.save(n);
+
+		// mail.setStatus("Not Started");
+		// mailRepository.save(mail);
 
 		return n.getId();
 	}
@@ -72,42 +72,35 @@ public class RequestController {
 			return "Request does not exist";
 		}
 
-		String name = info.getName();
-		if (name != null) {
-            n.setName(name);
+        String type = info.getInstructionType();
+		if (type != null) {
+            n.setInstructionType(type);
 		}
-        String phoneNumber = info.getPhoneNumber();
-		if (phoneNumber != null) {
-            n.setPhoneNumber(phoneNumber);
+        String instructions = info.getInstructionDescription();
+		if (instructions != null) {
+            n.setInstructionDescription(instructions);
 		}
-        String status = info.getStatus();
-		if (status != null) {
-            n.setStatus(status);
+        String completionDate = info.getRequestedCompletionDate();
+		if (completionDate != null) {
+			Date dateObj = new Date();
+			try {
+				dateObj = dateFormatter.parse(completionDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+            n.setRequestedCompletionDate(dateObj);
 		}
         String feedback = info.getFeedback();
 		if (feedback != null) {
             n.setFeedback(feedback);
-		}
-        String instructions = info.getInstructions();
-		if (instructions != null) {
-            n.setInstructions(instructions);
-		}
-        String type = info.getType();
-		if (type != null) {
-            n.setType(type);
-		}
-        Integer mailId = info.getMailId();
-		if (mailId != null) {
-			Mail mail = mailRepository.findMailById(mailId);
-            n.setMail(mail);
 		}
 
 		requestRepository.save(n);
 		return "Request Updated";
 	}
 
-	@PutMapping(path="/complete")
-	public String completeRequest (@RequestBody RequestInfo info) {
+	@PutMapping(path="/submit")
+	public String submitRequest (@RequestBody RequestInfo info) {
 
 		Request n = requestRepository.findRequestById(info.getId());
 		
@@ -115,20 +108,30 @@ public class RequestController {
 			return "Request does not exist";
 		}
 
-		n.setStatus("complete");
-        n.setCompletionDate(new Date());
-        String feedback = info.getFeedback();
-		if (feedback != null) {
-            n.setFeedback(feedback);
+        String type = info.getInstructionType();
+		if (type != null) {
+            n.setInstructionType(type);
 		}
-        Integer mailId = info.getMailId();
-		if (mailId != null) {
-			Mail mail = mailRepository.findMailById(mailId);
-            n.setMail(mail);
+        String instructions = info.getInstructionDescription();
+		if (instructions != null) {
+            n.setInstructionDescription(instructions);
+		}
+        String completionDate = info.getRequestedCompletionDate();
+		if (completionDate != null) {
+			Date dateObj = new Date();
+			try {
+				dateObj = dateFormatter.parse(completionDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+            n.setRequestedCompletionDate(dateObj);
 		}
 
 		requestRepository.save(n);
-		return "Request Updated";
+		Mail mail = mailRepository.findByRequest(n);
+		mail.setStatus("Not Started");
+		mailRepository.save(mail);
+		return "Request Submitted";
 	}
 
 	@DeleteMapping
@@ -146,22 +149,11 @@ public class RequestController {
 
 	@GetMapping
 	public Iterable<Request> getAllRequest() {
-		return requestRepository.findByOrderBySubmissionDateAsc();
+		return requestRepository.findAll();
 	}
 
 	@GetMapping(path="/id")
 	public Request getRequest(@RequestParam Integer id) {
 		return requestRepository.findRequestById(id);
-	}
-
-	// @GetMapping(path="/incomplete")
-	// public Iterable<Request> getIncompleteRequest() {
-	// 	Topic topic = topicRepository.findTopicById(topicId);
-	// 	return requestRepository.findByTopicOrderByDateAsc(topic);
-	// }
-
-	@GetMapping(path="/byEmail")
-	public Iterable<Request> getRequestByEmail(@RequestParam String email) {
-		return requestRepository.findByEmailOrderBySubmissionDateAsc(email);
 	}
 }

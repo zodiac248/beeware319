@@ -10,9 +10,7 @@ public interface PostingRepository extends CrudRepository<Posting, Integer> {
 
     Iterable<Posting> findByOrderByEmailAsc();
 
-    Iterable<Posting> findByTopic(Topic topic);
+    Iterable<Posting> findByTopicOrderByDateDesc(Topic topic);
 
-    Iterable<Posting> findByTopicOrderByDateAsc(Topic topic);
-
-    Iterable<Posting> findByEmailOrderByDateAsc(String email);
+    Iterable<Posting> findByEmailOrderByDateDesc(String email);
 }

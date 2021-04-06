@@ -66,12 +66,12 @@ public class FloorController {
 				throw new BuildingNoLongerExistsException("Building with id=" + buildingId + " does not exist");
 			}
 			String deskNumbers = info.getDeskNumbers();
-			String imageUrl = info.getImageUrl();
+			String image = info.getImage();
 
 			Floor n = new Floor();
 			n.setFloorNumber(floorNumber);
 			n.setBuilding(building);
-			n.setImageUrl(imageUrl);
+			n.setImage(image);
 			try{
 				floorRepository.save(n);
 			} catch (Exception e) {
@@ -111,7 +111,7 @@ public class FloorController {
 			Integer floorNumber = info.getFloorNumber();
 			Integer buildingId = info.getBuildingId();
 			String deskNumbers = info.getDeskNumbers();
-			String imageUrl = info.getImageUrl();
+			String image = info.getImage();
 
 			Floor n = floorRepository.findFloorById(id);
 
@@ -129,15 +129,20 @@ public class FloorController {
 				}
 				n.setBuilding(building);
 			}
-			if (imageUrl != null) {
-				n.setImageUrl(imageUrl);
+			if (image != null) {
+				n.setImage(image);
 			}
 			try{
 				floorRepository.save(n);
 			} catch (Exception e) {
 				throw new DuplicateFloorException("the floor with floor number "+floorNumber+" and buildingid "+buildingId+" already exists");
 			}
-			if (deskNumbers != null) {
+			if (deskNumbers == "") {
+				Iterator<Desk> desksIterator = deskRepository.findByFloor(n).iterator();
+				while (desksIterator.hasNext()) {
+					deskRepository.delete(desksIterator.next());
+				}
+			} else if (deskNumbers != null) {
 				List<String> desks = new LinkedList<String>(Arrays.asList(deskNumbers.split("[ ]*,[ ]*")));
 				Integer floorId = n.getId();
 
@@ -185,7 +190,11 @@ public class FloorController {
 				throw new FloorNoLongerExists("Floor with id=" + id + " does not exist");
 			}
 
-			deleteFloorCasc(n);
+			Iterator<Desk> deskIterator = deskRepository.findByFloor(n).iterator();
+			while (deskIterator.hasNext()) {
+				deskRepository.delete(deskIterator.next());
+			}
+
 			floorRepository.delete(n);
 			return resultController.handleSuccess("Floor Deleted");
 		} catch (Exception e) {
@@ -252,21 +261,5 @@ public class FloorController {
 		ret.put("desks", desksInfo);
 
 		return ret;
-	}
-
-	private void deleteFloorCasc(Floor floor) {
-		Iterator<Desk> deskIterator = deskRepository.findByFloor(floor).iterator();
-		while (deskIterator.hasNext()) {
-			Desk desk = deskIterator.next();
-			deleteDeskCasc(desk);
-			deskRepository.delete(desk);
-		}
-	}
-
-	private void deleteDeskCasc(Desk desk) {
-		Iterator<Booking> bookingIterator = bookingRepository.findByDesk(desk).iterator();
-		while (bookingIterator.hasNext()) {
-			bookingRepository.delete(bookingIterator.next());
-		}
 	}
 }

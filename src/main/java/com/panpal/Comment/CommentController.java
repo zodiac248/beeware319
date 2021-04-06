@@ -91,7 +91,7 @@ public class CommentController {
 	@GetMapping
 	public Iterable<Comment> getCommentByPosting(@RequestParam Integer postingId) {
 		Posting posting = postingRepository.findPostingById(postingId);
-		return commentRepository.findByPostingOrderByDateAsc(posting);
+		return commentRepository.findByPostingOrderByDateDesc(posting);
 	}
 
 	// @GetMapping(path="/byEmployee")

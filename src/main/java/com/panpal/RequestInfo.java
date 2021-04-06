@@ -63,19 +63,21 @@ public class RequestInfo {
 
 	private Integer mailId;
 
-	private String phoneNumber;
+	private Integer requestId;
+
+	private String sender;
 
 	private String status;
 
+	private String instructionType;
+
+	private String instructionDescription;
+
+	private String requestedCompletionDate;
+
 	private String feedback;
 
-	private String instructions;
-
-	private String type;
-
-	private String completionDate;
-
-	private Integer requestId;
+	private String image;
 
 
 	public Integer getId() {
@@ -190,31 +192,36 @@ public class RequestInfo {
 		return mailId;
 	}
 
-	public String getPhoneNumber() {
-		return phoneNumber;
+	public Integer getRequestId() {
+		return requestId;
+	}
+
+	public String getSender() {
+		return sender;
 	}
 
 	public String getStatus() {
 		return status;
 	}
 
+	public String getInstructionType() {
+		return instructionType;
+	}
+
+	public String getInstructionDescription() {
+		return instructionDescription;
+	}
+
+	public String getRequestedCompletionDate() {
+		return requestedCompletionDate;
+	}
+
 	public String getFeedback() {
 		return feedback;
 	}
 
-	public String getInstructions() {
-		return instructions;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public String getCompletionDate() {
-		return completionDate;
-	}
-
-	public Integer getRequestId() {
-		return requestId;
+	public String getImage() {
+		return image;
 	}
 }
+

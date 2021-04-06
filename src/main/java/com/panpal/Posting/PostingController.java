@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.panpal.RequestInfo;
 import com.panpal.Topic.TopicRepository;
 import com.panpal.Topic.Topic;
-import com.panpal.Comment.CommentRepository;
-import com.panpal.Comment.Comment;
 import com.panpal.Notification.NotificationRepository;
 import com.panpal.Notification.Notification;
 import com.panpal.Subscription.SubscriptionRepository;
@@ -36,8 +34,6 @@ public class PostingController {
 	private PostingRepository postingRepository;
 	@Autowired
 	private TopicRepository topicRepository;
-	@Autowired
-	private CommentRepository commentRepository;
 	@Autowired
 	private SubscriptionRepository subscriptionRepository;
 	@Autowired
@@ -147,7 +143,6 @@ public class PostingController {
 			return "Posting does not exist";
 		}
 
-		deletePostingCasc(n);
 		postingRepository.delete(n);
 		return "Posting Deleted";
 	}
@@ -165,7 +160,7 @@ public class PostingController {
 	@GetMapping(path="/byTopic")
 	public Iterable<Posting> getPostingByTopic(@RequestParam Integer topicId) {
 		Topic topic = topicRepository.findTopicById(topicId);
-		return postingRepository.findByTopicOrderByDateAsc(topic);
+		return postingRepository.findByTopicOrderByDateDesc(topic);
 	}
 
     @GetMapping(path="/byEmailSubscriptions")
@@ -173,7 +168,7 @@ public class PostingController {
         ArrayList<Posting> postings = new ArrayList<Posting>();
         Iterator<Subscription> subsIterator = subscriptionRepository.findByEmailOrderByTopicAsc(email).iterator();
         while (subsIterator.hasNext()) {
-            postingRepository.findByTopicOrderByDateAsc(subsIterator.next().getTopic()).forEach(postings::add);
+            postingRepository.findByTopicOrderByDateDesc(subsIterator.next().getTopic()).forEach(postings::add);
         }
         postings.sort((p1,p2) -> p2.getDate().compareTo(p1.getDate()));
         return postings;
@@ -181,17 +176,6 @@ public class PostingController {
 
 	@GetMapping(path="/byEmail")
 	public Iterable<Posting> getPostingByEmail(@RequestParam String email) {
-		return postingRepository.findByEmailOrderByDateAsc(email);
-	}
-
-	private void deletePostingCasc(Posting posting) {
-		Iterator<Comment> commentIterator = commentRepository.findByPosting(posting).iterator();
-		while (commentIterator.hasNext()) {
-			commentRepository.delete(commentIterator.next());
-		}
-		Iterator<Notification> noteIterator = notificationRepository.findByPosting(posting).iterator();
-		while (noteIterator.hasNext()) {
-			notificationRepository.delete(noteIterator.next());
-		}
+		return postingRepository.findByEmailOrderByDateDesc(email);
 	}
 }

@@ -24,7 +24,6 @@ public class TestDesk {
 		Building sampleBuilding = new Building();
 		
 		sampleFloor.setFloorNumber(10);
-		sampleFloor.setImageUrl("sample/image.png");
 		sampleBuilding.setName("ICBC - Beeware");
 		sampleBuilding.setAddress("Beeware street, vancouver");
 		sampleFloor.setBuilding(sampleBuilding);
