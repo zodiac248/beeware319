@@ -32,7 +32,7 @@ public class MainApplication {
 				registry.addMapping("/**")
 						.allowedHeaders("*")
 						.allowedMethods("*")
-						.allowedOrigins("*")
+						.allowedOrigins("https://beeware319-front.herokuapp.com")
 						.allowCredentials(true);
 			}
 	 	};
