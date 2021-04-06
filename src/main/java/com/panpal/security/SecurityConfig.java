@@ -39,16 +39,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors().configurationSource(CorsConfigurationSource()).and().csrf().disable()
-                .exceptionHandling().accessDeniedHandler(accessDeniedHandler).and()
-
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-
-                .authorizeRequests()
-
-                .anyRequest().authenticated().requestMatchers(CorsUtils::isPreFlightRequest).permitAll().antMatchers(HttpMethod.OPTIONS)
-                .permitAll();
-        httpSecurity.addFilterAt(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+//        httpSecurity.cors().configurationSource(CorsConfigurationSource()).and().csrf().disable()
+//                .exceptionHandling().accessDeniedHandler(accessDeniedHandler).and()
+//
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+//
+//                .authorizeRequests()
+//
+//                .anyRequest().authenticated().requestMatchers(CorsUtils::isPreFlightRequest).permitAll().antMatchers(HttpMethod.OPTIONS)
+//                .permitAll();
+//        httpSecurity.addFilterAt(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.httpBasic().disable();
     }
 
     //
