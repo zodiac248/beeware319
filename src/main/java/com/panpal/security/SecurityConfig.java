@@ -39,6 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
 
                 .and().addFilterBefore(corsFilter, ChannelProcessingFilter.class);
+        httpSecurity.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         httpSecurity.authorizeRequests().requestMatchers(CorsUtils::isPreFlightRequest).permitAll();
         httpSecurity.addFilterAt(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
