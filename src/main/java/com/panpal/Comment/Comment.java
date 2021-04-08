@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.panpal.Posting.Posting;
 
@@ -22,7 +22,7 @@ public class Comment {
 	@ManyToOne
 	private Posting posting;
 
-	private Date date;
+	private LocalDateTime date;
 
 	@Column(columnDefinition = "varchar(1024) default ''")
 	private String content;
@@ -51,11 +51,11 @@ public class Comment {
 		this.posting = posting;
 	}
 
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 

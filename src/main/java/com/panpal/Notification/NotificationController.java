@@ -16,8 +16,7 @@ import com.panpal.RequestInfo;
 import com.panpal.Posting.PostingRepository;
 import com.panpal.Posting.Posting;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController

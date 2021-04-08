@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import com.panpal.Mail.Mail;
 
@@ -25,7 +25,7 @@ public class Request {
 
 	private String instructionDescription;
 
-	private Date requestedCompletionDate;
+	private LocalDate requestedCompletionDate;
 
 	private String feedback;
 
@@ -69,11 +69,11 @@ public class Request {
 		this.instructionDescription = instruction;
 	}
 
-	public Date getRequestedCompletionDate() {
+	public LocalDate getRequestedCompletionDate() {
 		return requestedCompletionDate;
 	}
 
-	public void setRequestedCompletionDate(Date date) {
+	public void setRequestedCompletionDate(LocalDate date) {
 		this.requestedCompletionDate = date;
 	}
 

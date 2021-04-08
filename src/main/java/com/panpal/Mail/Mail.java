@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.panpal.Request.Request;
 import com.panpal.Building.Building;
@@ -25,7 +25,7 @@ public class Mail {
 
 	private String sender;
 
-	private Date date;
+	private LocalDateTime date;
 
 	@ManyToOne
 	private Building building;
@@ -76,11 +76,11 @@ public class Mail {
 		this.sender = sender;
 	}
 
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 

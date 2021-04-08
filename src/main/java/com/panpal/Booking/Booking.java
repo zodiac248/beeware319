@@ -3,7 +3,7 @@ package com.panpal.Booking;
 import javax.persistence.*;
 
 import java.util.Date;
-
+import java.time.LocalDate;
 import com.panpal.Desk.Desk;
 
 @Entity
@@ -23,7 +23,7 @@ public class Booking {
 
 	private String email;
 
-	private Date date;
+	private LocalDate date;
 
 	public Integer getId() {
 		return id;
@@ -49,11 +49,11 @@ public class Booking {
 		this.email = email;
 	}
 
-	public Date getDate() {
+	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDate date) {
 		this.date = date;
 	}
 }

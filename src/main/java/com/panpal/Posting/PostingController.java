@@ -21,8 +21,7 @@ import com.panpal.Notification.Notification;
 import com.panpal.Subscription.SubscriptionRepository;
 import com.panpal.Subscription.Subscription;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.ArrayList;
 
@@ -39,7 +38,6 @@ public class PostingController {
 	@Autowired
 	private NotificationRepository notificationRepository;
 
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private ResultController resultController = new ResultController();
 
 	@PostMapping
@@ -48,12 +46,13 @@ public class PostingController {
 		String email = info.getEmail();
 		Integer topicId = info.getTopicId();
 		Topic topic = topicRepository.findTopicById(topicId);
-		Date dateObj = new Date();
+		LocalDateTime dateObj = LocalDateTime.now();
 		String title = info.getTitle();
 		String content = info.getContent();
 		if (content.length()>=1024) {
 			throw new RuntimeException("content to long, should not exceed 1024 characters");
 		}
+
 		Posting n = new Posting();
 		n.setEmail(email);
 		n.setTopic(topic);

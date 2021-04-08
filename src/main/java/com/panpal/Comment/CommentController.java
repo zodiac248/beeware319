@@ -16,7 +16,7 @@ import com.panpal.RequestInfo;
 import com.panpal.Posting.PostingRepository;
 import com.panpal.Posting.Posting;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.text.SimpleDateFormat;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
@@ -35,7 +35,7 @@ public class CommentController {
 		String email = info.getEmail();
 		Integer postingId = info.getPostingId();
 		Posting posting = postingRepository.findPostingById(postingId);
-		Date dateObj = new Date();
+		LocalDateTime dateObj = LocalDateTime.now();
 		String content = info.getContent();
 
 		Comment n = new Comment();

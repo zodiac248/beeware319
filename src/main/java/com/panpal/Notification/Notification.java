@@ -6,7 +6,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import com.panpal.Posting.Posting;
 
@@ -21,7 +21,7 @@ public class Notification {
 	@ManyToOne
 	private Posting posting;
 
-	private Date date;
+	private LocalDateTime date;
 
 	public Integer getId() {
 		return id;
@@ -47,11 +47,11 @@ public class Notification {
 		this.posting = posting;
 	}
 
-	public Date getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(Date date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 }

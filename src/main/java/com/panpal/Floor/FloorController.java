@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.text.ParseException;  
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import java.time.LocalDate;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
@@ -216,10 +217,10 @@ public class FloorController {
 		JSONObject ret = new JSONObject();
 		JSONArray desksInfo = new JSONArray();
 
-		Date dateObj = new Date();
+		LocalDate dateObj = null;
 		try {  
-			dateObj = dateFormatter.parse(date);
-		} catch (ParseException e) {
+			dateObj = LocalDate.parse(date);
+		} catch (Exception e) {
 			e.printStackTrace();
 		}  
 

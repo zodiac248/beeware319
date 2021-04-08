@@ -18,10 +18,10 @@ import com.panpal.Request.Request;
 import com.panpal.Mail.MailRepository;
 import com.panpal.Mail.Mail;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Iterator;
 import java.text.ParseException;
+import java.time.format.DateTimeParseException;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
@@ -32,19 +32,12 @@ public class RequestController {
 	@Autowired
 	private MailRepository mailRepository;
 
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-
 	@PostMapping
 	public Integer addNewRequest (@RequestBody RequestInfo info) {
         String type = info.getInstructionType();
 		String instructions = info.getInstructionDescription();
         String completionDate = info.getRequestedCompletionDate();
-		Date dateObj = new Date();
-		try {
-			dateObj = dateFormatter.parse(completionDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+	    LocalDate dateObj = LocalDate.now();
 		String feedback = info.getFeedback();
 		// Integer mailId = info.getMailId();
 		// Mail mail = mailRepository.findMailById(mailId);
@@ -82,10 +75,10 @@ public class RequestController {
 		}
         String completionDate = info.getRequestedCompletionDate();
 		if (completionDate != null) {
-			Date dateObj = new Date();
+			LocalDate dateObj = null;
 			try {
-				dateObj = dateFormatter.parse(completionDate);
-			} catch (ParseException e) {
+				dateObj = LocalDate.parse(completionDate);
+			} catch (DateTimeParseException e) {
 				e.printStackTrace();
 			}
             n.setRequestedCompletionDate(dateObj);
@@ -125,10 +118,10 @@ public class RequestController {
 		}
         String completionDate = info.getRequestedCompletionDate();
 		if (completionDate != null) {
-			Date dateObj = new Date();
+			LocalDate dateObj = null;
 			try {
-				dateObj = dateFormatter.parse(completionDate);
-			} catch (ParseException e) {
+				dateObj = LocalDate.parse(completionDate);
+			} catch (DateTimeParseException e) {
 				e.printStackTrace();
 			}
             n.setRequestedCompletionDate(dateObj);

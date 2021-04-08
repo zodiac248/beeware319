@@ -20,8 +20,7 @@ import com.panpal.Request.Request;
 import com.panpal.Building.BuildingRepository;
 import com.panpal.Building.Building;
 
-import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
@@ -35,13 +34,11 @@ public class MailController {
 	@Autowired
 	private BuildingRepository buildingRepository;
 
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
 	@PostMapping
 	public Integer addNewMail (@RequestBody RequestInfo info) {
 		String email = info.getEmail();
         Integer buildingId = info.getBuildingId();
-		Date arrivalDate = new Date();
+		LocalDateTime arrivalDate = LocalDateTime.now();
 		String sender = info.getSender();
 
 		Mail n = new Mail();

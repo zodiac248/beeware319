@@ -28,6 +28,7 @@ import java.util.Calendar;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
 import java.text.ParseException;
+import java.time.format.DateTimeParseException;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
@@ -43,8 +44,6 @@ public class BookingController {
 	private BuildingRepository buildingRepository;
 	private ResultController resultController = new ResultController();
 
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-
 	@PostMapping
 	public ResponseEntity<String> addNewBooking (@RequestBody RequestInfo info) {
 		try {
@@ -55,61 +54,28 @@ public class BookingController {
 			}
 			String email = info.getEmail();
 			String date = info.getDate();
-			Date dateObj = new Date();
+
+			LocalDate dateObj = null;
 
 			try {
-				dateObj = dateFormatter.parse(date);
-			} catch (ParseException e) {
+				dateObj = LocalDate.parse(date);
+			} catch (DateTimeParseException e) {
 				e.printStackTrace();
 			}
-			Integer range = info.getRange();
 
-			Date currentDate = new Date();
-			Calendar c = Calendar.getInstance();
-			c.setTime(currentDate);
-			c.add(Calendar.MONTH, 6);
-			Date farthestDate = c.getTime();
-			LocalDate dateBefore = LocalDate.parse(dateFormatter.format(dateObj));
-			LocalDate dateAfter = LocalDate.parse(dateFormatter.format(farthestDate));
-			Long acceptableRangeLong = ChronoUnit.DAYS.between(dateBefore, dateAfter);
-			Integer acceptableRange = acceptableRangeLong.intValue();
-
-			if (range == 1) {
-				Booking n = new Booking();
-				n.setDesk(desk);
-				n.setEmail(email);
-				n.setDate(dateObj);
-				try{
-					bookingRepository.save(n);
-				}catch (Exception e) {
-					throw new BookingNotAvailableException(info.getDate() + " is already reserved");
-				}
-				return resultController.handleSuccess("booking Saved");
-			} else if (range <= acceptableRange) {
-				for (int i=0; i<range; i++) {
-					Booking b = new Booking();
-					b.setDesk(desk);
-					b.setEmail(email);
-					c.setTime(dateObj);
-					c.add(Calendar.DATE, i);
-					Date d = c.getTime();
-					b.setDate(d);
-					try{
-						bookingRepository.save(b);
-					}catch (Exception e) {
-						throw new BookingNotAvailableException(b.getDate()+" is already reserved");
-					}
-				}
-				return resultController.handleSuccess("booking Saved");
-			} else {
-				throw new ExceedRangeException();
-			}
-
-
-		} catch (Exception e){
-			return resultController.handleError(e);
+            Booking n = new Booking();
+            n.setDesk(desk);
+            n.setEmail(email);
+            n.setDate(dateObj);
+            try{
+                bookingRepository.save(n);
+            }catch (Exception e) {
+                throw new BookingNotAvailableException(info.getDate() + " is already reserved");
+            }
+        } catch (Exception e){
+			    return resultController.handleError(e);
 		}
-
+        return resultController.handleSuccess("booking Saved");
 	}
 
 	@PutMapping
@@ -120,11 +86,11 @@ public class BookingController {
 			String email = info.getEmail();
 			String date = info.getDate();
 
-			Date dateObj = new Date();
+			LocalDate dateObj = null;
 			if (date != null) {
 				try {
-					dateObj = dateFormatter.parse(date);
-				} catch (ParseException e) {
+					dateObj = LocalDate.parse(date);
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
@@ -195,10 +161,10 @@ public class BookingController {
 	@GetMapping(path="/date")
 	public Iterable<Booking> getBookingsByDate(@RequestParam String date) {
 
-		Date dateObj = new Date();
+		LocalDate dateObj = null;
 		try {  
-			dateObj = dateFormatter.parse(date);
-		} catch (ParseException e) {
+			dateObj = LocalDate.parse(date);
+		} catch (DateTimeParseException e) {
 			e.printStackTrace();
 		} 
 
@@ -209,10 +175,10 @@ public class BookingController {
 	public ArrayList<Booking> getBookings(@RequestParam String date
 	, @RequestParam Integer floorId) {
 
-		Date dateObj = new Date();
+		LocalDate dateObj = null;
 		try {  
-			dateObj = dateFormatter.parse(date);
-		} catch (ParseException e) {
+			dateObj = LocalDate.parse(date);
+		} catch (DateTimeParseException e) {
 			e.printStackTrace();
 		} 
 
