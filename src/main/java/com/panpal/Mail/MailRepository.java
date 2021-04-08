@@ -8,13 +8,13 @@ import com.panpal.Request.Request;
 public interface MailRepository extends CrudRepository<Mail, Integer> {
     Mail findMailById(Integer id);
     
-    Iterable<Mail> findByOrderByDateDesc();
+    Iterable<Mail> findByOrderByDateAsc();
     
-    Iterable<Mail> findByEmailOrderByDateDesc(String email);
+    Iterable<Mail> findByEmailOrderByDateAsc(String email);
     
-    Iterable<Mail> findByStatusOrderByDateDesc(String status);
+    Iterable<Mail> findByStatusOrderByDateAsc(String status);
     
-    Iterable<Mail> findByEmailAndStatusOrderByDateDesc(String email, String status);
+    Iterable<Mail> findByEmailAndStatusOrderByDateAsc(String email, String status);
     
     Mail findByRequest(Request request);
 }

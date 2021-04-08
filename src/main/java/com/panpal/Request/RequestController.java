@@ -96,6 +96,13 @@ public class RequestController {
 		}
 
 		requestRepository.save(n);
+
+		String status = info.getStatus();
+		if (status != null) {
+		Mail mail = mailRepository.findByRequest(n);
+        		mail.setStatus(status);
+        		mailRepository.save(mail);
+		}
 		return "Request Updated";
 	}
 

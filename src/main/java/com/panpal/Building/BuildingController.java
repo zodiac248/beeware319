@@ -107,6 +107,7 @@ public class BuildingController {
 			return resultController.handleError(e);
 		}
 	}
+
 	@GetMapping(path="/all")
 	public Iterable<Building> getAllBuildings() {
 		return buildingRepository.findByOrderByNameAsc();

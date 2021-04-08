@@ -2,6 +2,11 @@ package com.panpal.Topic;
 
 import javax.persistence.*;
 
+import java.util.List;
+
+import com.panpal.Subscription.Subscription;
+import com.panpal.Posting.Posting;
+
 @Entity // This tells Hibernate to make a table out of this class
 @Table(
 		name = "topic",
@@ -15,6 +20,12 @@ public class Topic {
 	private Integer id;
 
 	private String name;
+
+	@OneToMany(mappedBy="topic", cascade=CascadeType.REMOVE)
+	private List<Subscription> subscriptions;
+
+	@OneToMany(mappedBy="topic", cascade=CascadeType.REMOVE)
+	private List<Posting> postings;
 
 	public Integer getId() {
 		return id;

@@ -1,8 +1,10 @@
 package com.panpal.Desk;
 
 import javax.persistence.*;
+import java.util.List;
 
 import com.panpal.Floor.Floor;
+import com.panpal.Booking.Booking;
 
 @Entity
 @Table(
@@ -20,6 +22,9 @@ public class Desk {
 
 	@ManyToOne
 	private Floor floor;
+
+	@OneToMany(mappedBy="desk", cascade=CascadeType.REMOVE)
+	private List<Booking> bookings;
 
 	public Integer getId() {
 		return id;

@@ -190,11 +190,6 @@ public class FloorController {
 				throw new FloorNoLongerExists("Floor with id=" + id + " does not exist");
 			}
 
-			Iterator<Desk> deskIterator = deskRepository.findByFloor(n).iterator();
-			while (deskIterator.hasNext()) {
-				deskRepository.delete(deskIterator.next());
-			}
-
 			floorRepository.delete(n);
 			return resultController.handleSuccess("Floor Deleted");
 		} catch (Exception e) {

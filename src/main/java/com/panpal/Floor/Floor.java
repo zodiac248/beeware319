@@ -2,9 +2,11 @@ package com.panpal.Floor;
 
 import javax.persistence.*;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.panpal.Building.Building;
+import com.panpal.Desk.Desk;
 
 @Entity
 @Table(
@@ -26,6 +28,9 @@ public class Floor {
 
 	@ManyToOne
 	private Building building;
+
+	@OneToMany(mappedBy="floor", cascade=CascadeType.REMOVE)
+	private List<Desk> desks;
 
 	public Integer getId() {
 		return id;

@@ -107,7 +107,7 @@ public class MailController {
 
 	@GetMapping(path="/all")
 	public Iterable<Mail> getAllMail() {
-		return mailRepository.findByOrderByDateDesc();
+		return mailRepository.findByOrderByDateAsc();
 	}
 
 	@GetMapping(path="/id")
@@ -117,17 +117,17 @@ public class MailController {
 
 	@GetMapping(path="/byStatus")
 	public Iterable<Mail> getMailByStatus(@RequestParam String status) {
-		return mailRepository.findByStatusOrderByDateDesc(status);
+		return mailRepository.findByStatusOrderByDateAsc(status);
 	}
 
 	@GetMapping(path="/byEmail")
 	public Iterable<Mail> getMailByEmail(@RequestParam String email) {
-		return mailRepository.findByEmailOrderByDateDesc(email);
+		return mailRepository.findByEmailOrderByDateAsc(email);
 	}
 
 	@GetMapping
 	public Iterable<Mail> getMail(@RequestParam String email
 	, @RequestParam String status) {
-		return mailRepository.findByEmailAndStatusOrderByDateDesc(email, status);
+		return mailRepository.findByEmailAndStatusOrderByDateAsc(email, status);
 	}
 }

@@ -1,13 +1,10 @@
 package com.panpal.Building;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.UniqueConstraint;
-
+import javax.persistence.*;
+import java.util.List;
 import java.util.Objects;
+
+import com.panpal.Floor.Floor;
 
 @Entity // This tells Hibernate to make a table out of this class
 @Table(
@@ -27,6 +24,9 @@ public class Building {
 	private String address;
 
 	private String code;
+
+	@OneToMany(mappedBy="building", cascade=CascadeType.REMOVE)
+	private List<Floor> floors;
 
 	public Integer getId() {
 		return id;
