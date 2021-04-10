@@ -1,8 +1,11 @@
 package com.panpal.Topic;
 
+import com.panpal.Error.DuplicateFloorException;
 import com.panpal.Error.DuplicateTopicException;
+import com.panpal.Error.InputTooLongException;
 import com.panpal.ResultController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +39,18 @@ public class TopicController {
 			try {
 				topicRepository.save(n);
 			} catch (Exception e){
-				throw new DuplicateTopicException("the topic with the same name already exists");
+				if (e instanceof DataIntegrityViolationException){
+					DataIntegrityViolationException a = (DataIntegrityViolationException) e;
+					String reason = a.getRootCause().getMessage();
+					if (reason.contains("Data too long")) {
+						throw new InputTooLongException();
+					} else if (reason.contains("Duplicate")){
+						throw new DuplicateTopicException("the topic with the same name already exists");
+					} else {
+						throw e;
+					}
+
+				}
 			}
 			return resultController.handleSuccess("Topic Saved");
 		} catch (Exception e) {
@@ -63,8 +77,18 @@ public class TopicController {
 		try {
 			topicRepository.save(n);
 		} catch (Exception e){
-			throw new DuplicateTopicException("the topic with the same name already exists");
-		}
+			if (e instanceof DataIntegrityViolationException) {
+				DataIntegrityViolationException a = (DataIntegrityViolationException) e;
+				String reason = a.getRootCause().getMessage();
+				if (reason.contains("Data too long")) {
+					throw new InputTooLongException();
+				} else if (reason.contains("Duplicate")) {
+					throw new DuplicateTopicException("the topic with the same name already exists");
+				}else {
+					throw e;
+				}
+
+			}}
 		return "Topic Updated";
 	}
 

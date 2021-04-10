@@ -1,5 +1,6 @@
 package com.panpal.Posting;
 
+import com.panpal.Error.InputTooLongException;
 import com.panpal.ResultController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -23,6 +24,7 @@ import com.panpal.Subscription.Subscription;
 
 import java.time.LocalDateTime;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ArrayList;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
@@ -41,49 +43,53 @@ public class PostingController {
 	private ResultController resultController = new ResultController();
 
 	@PostMapping
-	public Integer addNewPosting (@RequestBody RequestInfo info) {
-		
-		String email = info.getEmail();
-		Integer topicId = info.getTopicId();
-		Topic topic = topicRepository.findTopicById(topicId);
-		LocalDateTime dateObj = LocalDateTime.now();
-		String title = info.getTitle();
-		String content = info.getContent();
-		if (content.length()>=1024) {
-			throw new RuntimeException("content to long, should not exceed 1024 characters");
-		}
-
-		Posting n = new Posting();
-		n.setEmail(email);
-		n.setTopic(topic);
-		n.setDate(dateObj);
-		n.setTitle(title);
-		n.setLikes(0);
-		n.setContent(content);
-		postingRepository.save(n);
-
-		Iterator<Subscription> subsIterator = subscriptionRepository.findByTopicOrderByEmailAsc(topic).iterator();
-		while (subsIterator.hasNext()) {
-			Subscription sub = subsIterator.next();
-			String subEmail = sub.getEmail();
-			if (subEmail == email) {
-				continue;
+	public Object addNewPosting (@RequestBody RequestInfo info) {
+		try{
+			String email = info.getEmail();
+			Integer topicId = info.getTopicId();
+			Topic topic = topicRepository.findTopicById(topicId);
+			LocalDateTime dateObj = LocalDateTime.now();
+			String title = info.getTitle();
+			String content = info.getContent();
+			if (content.length()>=1024 || title.length()>1024) {
+				throw new InputTooLongException();
 			}
-			Notification note = new Notification();
-			note.setEmail(subEmail);
-			note.setPosting(n);
-			note.setDate(dateObj);
-			notificationRepository.save(note);
-		}
 
-		return n.getId();
+			Posting n = new Posting();
+			n.setEmail(email);
+			n.setTopic(topic);
+			n.setDate(dateObj);
+			n.setTitle(title);
+			n.setLikes(0);
+			n.setContent(content);
+			postingRepository.save(n);
+
+			Iterator<Subscription> subsIterator = subscriptionRepository.findByTopicOrderByEmailAsc(topic).iterator();
+			while (subsIterator.hasNext()) {
+				Subscription sub = subsIterator.next();
+				String subEmail = sub.getEmail();
+				if (subEmail == email) {
+					continue;
+				}
+				Notification note = new Notification();
+				note.setEmail(subEmail);
+				note.setType("posting");
+				note.setPosting(n);
+				note.setDate(dateObj);
+				notificationRepository.save(note);
+			}
+
+			return n.getId();
+		} catch (Exception e){
+			return resultController.handleError(e);
+		}
 	}
 
 	@PutMapping
 	public String updatePosting (@RequestBody RequestInfo info) {
 
 		Posting n = postingRepository.findPostingById(info.getId());
-		
+
 		if (n == null) {
 			return "Posting does not exist";
 		}
@@ -109,7 +115,7 @@ public class PostingController {
 	public String likePosting (@RequestBody RequestInfo info) {
 
 		Posting n = postingRepository.findPostingById(info.getId());
-		
+
 		if (n == null) {
 			return "Posting does not exist";
 		}
@@ -123,7 +129,7 @@ public class PostingController {
 	public String unlikePosting (@RequestBody RequestInfo info) {
 
 		Posting n = postingRepository.findPostingById(info.getId());
-		
+
 		if (n == null) {
 			return "Posting does not exist";
 		}
@@ -135,9 +141,9 @@ public class PostingController {
 
 	@DeleteMapping
 	public String deletePosting (@RequestBody RequestInfo info) {
-		
+
 		Posting n = postingRepository.findPostingById(info.getId());
-		
+
 		if (n == null) {
 			return "Posting does not exist";
 		}
@@ -163,11 +169,11 @@ public class PostingController {
 	}
 
     @GetMapping(path="/byEmailSubscriptions")
-    public ArrayList<Posting> getPostingByEmailSubscription(@RequestParam String email) {
-        ArrayList<Posting> postings = new ArrayList<Posting>();
+    public List<Posting> getPostingByEmailSubscription(@RequestParam String email) {
+        List<Posting> postings = new ArrayList<Posting>();
         Iterator<Subscription> subsIterator = subscriptionRepository.findByEmailOrderByTopicAsc(email).iterator();
         while (subsIterator.hasNext()) {
-            postingRepository.findByTopicOrderByDateDesc(subsIterator.next().getTopic()).forEach(postings::add);
+            postingRepository.findTop50ByTopicOrderByDateDesc(subsIterator.next().getTopic()).forEach(postings::add);
         }
         postings.sort((p1,p2) -> p2.getDate().compareTo(p1.getDate()));
         return postings;

@@ -2,7 +2,14 @@ package com.panpal.Building;
 
 import com.panpal.Error.BuildingNoLongerExistsException;
 import com.panpal.Error.DuplicateBuildingException;
+import com.panpal.Error.ExceedRangeException;
+import com.panpal.Error.InputTooLongException;
+import org.hibernate.HibernateException;
+import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.exception.DataException;
+import org.hibernate.exception.SQLGrammarException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +24,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.panpal.RequestInfo;
 import com.panpal.ResultController;
+
+import java.sql.SQLDataException;
+import java.sql.SQLException;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
@@ -44,7 +54,18 @@ public class BuildingController {
 				buildingRepository.save(n);
 
 			} catch (Exception e) {
-				throw new DuplicateBuildingException("the name or the address of the building already exists");
+				if (e instanceof DataIntegrityViolationException){
+					DataIntegrityViolationException a = (DataIntegrityViolationException) e;
+					String reason = a.getRootCause().getMessage();
+					if (reason.contains("Data too long")) {
+						throw new InputTooLongException();
+					} else if (reason.contains("Duplicate")){
+						throw new DuplicateBuildingException("the name or the address of the building already exists");
+					}else {
+						throw e;
+					}
+
+				}
 			}
 			return resultController.handleSuccess("Building Saved");
 		} catch (Exception e){	
@@ -81,8 +102,17 @@ public class BuildingController {
 				buildingRepository.save(n);
 
 			} catch (Exception e) {
-				new DuplicateBuildingException("the name or the address of the building already exists");
-			}
+				if (e instanceof DataIntegrityViolationException) {
+					DataIntegrityViolationException a = (DataIntegrityViolationException) e;
+					String reason = a.getRootCause().getMessage();
+					if (reason.contains("Data too long")) {
+						throw new InputTooLongException();
+					} else if (reason.contains("Duplicate")) {
+						throw new DuplicateBuildingException("the name or the address of the building already exists");
+					} else {
+						throw e;
+					}
+				}}
 			return resultController.handleSuccess("Building Updated");
 		} catch (Exception e) {
 			return resultController.handleError(e);

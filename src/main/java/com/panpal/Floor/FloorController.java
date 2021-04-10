@@ -1,11 +1,9 @@
 package com.panpal.Floor;
 
-import com.panpal.Error.BuildingNoLongerExistsException;
-import com.panpal.Error.DuplicateDeskException;
-import com.panpal.Error.DuplicateFloorException;
-import com.panpal.Error.FloorNoLongerExists;
+import com.panpal.Error.*;
 import com.panpal.ResultController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -76,7 +74,18 @@ public class FloorController {
 			try{
 				floorRepository.save(n);
 			} catch (Exception e) {
-				throw new DuplicateFloorException("the floor with floor number "+floorNumber+" and buildingid "+buildingId+" already exists");
+				if (e instanceof DataIntegrityViolationException){
+					DataIntegrityViolationException a = (DataIntegrityViolationException) e;
+					String reason = a.getRootCause().getMessage();
+					if (reason.contains("Data too long")) {
+						throw new InputTooLongException();
+					} else if (reason.contains("Duplicate")){
+						throw new DuplicateFloorException("the floor with floor number "+floorNumber+" and buildingid "+buildingId+" already exists");
+					}else {
+						throw e;
+					}
+
+				}
 			}
 			if (deskNumbers != null) {
 				List<String> desks = new LinkedList<String>(Arrays.asList(deskNumbers.split("[ ]*,[ ]*")));
@@ -90,8 +99,18 @@ public class FloorController {
 						try {
 							deskRepository.save(d);
 						} catch (Exception e) {
-							throw new DuplicateDeskException("the desk with desk number "+d.getDeskNumber()+" and floor id "+ n.getId()+" already exists");
-						}
+							if (e instanceof DataIntegrityViolationException){
+								DataIntegrityViolationException a = (DataIntegrityViolationException) e;
+								String reason = a.getRootCause().getMessage();
+								if (reason.contains("Data too long")) {
+									throw new InputTooLongException();
+								} else if (reason.contains("Duplicate")){
+									throw new DuplicateDeskException("the desk with desk number "+d.getDeskNumber()+" and floor id "+d.getFloorId()+" already exists");
+								}else {
+									throw e;
+								}
+
+							}						}
 					}
 				}
 			}
@@ -136,8 +155,18 @@ public class FloorController {
 			try{
 				floorRepository.save(n);
 			} catch (Exception e) {
-				throw new DuplicateFloorException("the floor with floor number "+floorNumber+" and buildingid "+buildingId+" already exists");
-			}
+				if (e instanceof DataIntegrityViolationException){
+					DataIntegrityViolationException a = (DataIntegrityViolationException) e;
+					String reason = a.getRootCause().getMessage();
+					if (reason.contains("Data too long")) {
+						throw new InputTooLongException();
+					} else if (reason.contains("Duplicate")){
+						throw new DuplicateFloorException("the floor with floor number "+floorNumber+" and buildingid "+buildingId+" already exists");
+					}else {
+						throw e;
+					}
+
+				}			}
 			if (deskNumbers == "") {
 				Iterator<Desk> desksIterator = deskRepository.findByFloor(n).iterator();
 				while (desksIterator.hasNext()) {

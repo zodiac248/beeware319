@@ -79,6 +79,8 @@ public class RequestInfo {
 
 	private String image;
 
+	private String type;
+
 
 	public Integer getId() {
 		return id;
@@ -222,6 +224,10 @@ public class RequestInfo {
 
 	public String getImage() {
 		return image;
+	}
+
+	public String getType() {
+		return type;
 	}
 }
 

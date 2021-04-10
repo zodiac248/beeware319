@@ -24,7 +24,7 @@ public class Comment {
 
 	private LocalDateTime date;
 
-	@Column(columnDefinition = "varchar(1024) default ''")
+	@Column(columnDefinition = "varchar(250) default ''")
 	private String content;
 
 	public Integer getId() {

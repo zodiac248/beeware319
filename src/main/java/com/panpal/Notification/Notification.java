@@ -1,3 +1,4 @@
+
 package com.panpal.Notification;
 
 import javax.persistence.Entity;
@@ -18,6 +19,8 @@ public class Notification {
 
 	private String email;
 
+	private String type;
+
 	@ManyToOne
 	private Posting posting;
 
@@ -33,6 +36,14 @@ public class Notification {
 
 	public void setEmail(String email) {
 		this.email = email;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Posting getPosting() {

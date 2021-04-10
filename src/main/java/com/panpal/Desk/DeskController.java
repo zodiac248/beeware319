@@ -1,11 +1,10 @@
 package com.panpal.Desk;
 
+import com.panpal.Error.*;
 import com.panpal.Error.DeskNoLongerExistsException;
-import com.panpal.Error.DeskNoLongerExistsException;
-import com.panpal.Error.DuplicateDeskException;
-import com.panpal.Error.FloorNoLongerExists;
 import com.panpal.ResultController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -51,7 +50,18 @@ public class DeskController {
 				deskRepository.save(n);
 
 			} catch (Exception e) {
-				throw new DuplicateDeskException("the desk with desk number "+n.getDeskNumber()+" and floor id "+n.getFloorId()+" already exists");
+				if (e instanceof DataIntegrityViolationException){
+					DataIntegrityViolationException a = (DataIntegrityViolationException) e;
+					String reason = a.getRootCause().getMessage();
+					if (reason.contains("Data too long")) {
+						throw new InputTooLongException();
+					} else if (reason.contains("Duplicate")){
+						throw new DuplicateDeskException("the desk with desk number "+n.getDeskNumber()+" and floor id "+n.getFloorId()+" already exists");
+					}else {
+						throw e;
+					}
+
+				}
 			}
 			return resultController.handleSuccess("Desks Saved");
 
@@ -90,8 +100,18 @@ public class DeskController {
 				deskRepository.save(n);
 
 			} catch (Exception e) {
-				throw new DuplicateDeskException("the desk with desk number "+n.getDeskNumber()+" and floor id "+n.getFloorId()+" already exists");
-			}
+				if (e instanceof DataIntegrityViolationException){
+					DataIntegrityViolationException a = (DataIntegrityViolationException) e;
+					String reason = a.getRootCause().getMessage();
+					if (reason.contains("Data too long")) {
+						throw new InputTooLongException();
+					} else if (reason.contains("Duplicate")){
+						throw new DuplicateDeskException("the desk with desk number "+n.getDeskNumber()+" and floor id "+n.getFloorId()+" already exists");
+					}else {
+						throw e;
+					}
+
+				}			}
 			return resultController.handleSuccess("Desks Updated");
 		} catch (Exception e){
 			System.out.println(e.getCause());

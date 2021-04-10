@@ -16,10 +16,11 @@ public class ResultController {
 
 	public ResponseEntity<String> handleError(Exception e){
 		Throwable cause = e.getCause();
+		System.out.println(e.getMessage());
+        e.printStackTrace();
 
-
-		if (cause instanceof DataException){
-			return ResponseEntity.status(HttpStatus.URI_TOO_LONG).body("Input is too long: ");	
+		if (e instanceof InputTooLongException){
+			return ResponseEntity.status(HttpStatus.URI_TOO_LONG).body("Input is too long: should not exceed 1024 characters");
 		} else if (cause instanceof ConstraintViolationException) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).body("Variable already exists: ");
 		} else if (cause instanceof JDBCConnectionException){

@@ -30,11 +30,13 @@ public class NotificationController {
 	@PostMapping
 	public String addNewNotification (@RequestBody RequestInfo info) {
 		String email = info.getEmail();
+		String type = info.getType();
 		Integer postingId = info.getPostingId();
 		Posting posting = postingRepository.findPostingById(postingId);
 
 		Notification n = new Notification();
 		n.setEmail(email);
+		n.setType(type);
 		n.setPosting(posting);
 		n.setDate(posting.getDate());
 		notificationRepository.save(n);
@@ -43,9 +45,9 @@ public class NotificationController {
 
 	@DeleteMapping
 	public String deleteNotification (@RequestBody RequestInfo info) {
-		
+
 		Notification n = notificationRepository.findNotificationById(info.getId());
-		
+
 		if (n == null) {
 			return "Notification does not exist";
 		}
@@ -66,6 +68,6 @@ public class NotificationController {
 
 	@GetMapping
 	public Iterable<Notification> getNotificationByEmail(@RequestParam String email) {
-		return notificationRepository.findByEmailOrderByDateDesc(email);
+		return notificationRepository.findByEmailOrderByDateAsc(email);
 	}
 }

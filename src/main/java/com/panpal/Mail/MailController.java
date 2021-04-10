@@ -22,6 +22,7 @@ import com.panpal.Building.Building;
 
 import java.time.LocalDateTime;
 import java.util.Iterator;
+import java.util.ArrayList;
 
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
@@ -113,8 +114,15 @@ public class MailController {
 	}
 
 	@GetMapping(path="/byStatus")
-	public Iterable<Mail> getMailByStatus(@RequestParam String status) {
-		return mailRepository.findByStatusOrderByDateAsc(status);
+	public ArrayList<Mail> getMailByStatus(@RequestParam String status) {
+		ArrayList<Mail> ret = new ArrayList<Mail>();
+		if (status == "Awaiting Request") {
+			mailRepository.findByStatusOrderByDateAsc(status).forEach(ret::add);
+		} else {
+			mailRepository.findByStatusOrderByDateAsc(status).forEach(ret::add);
+			ret.sort((m1,m2) -> m2.getRequest().getRequestedCompletionDate().compareTo(m1.getRequest().getRequestedCompletionDate()));
+		}
+		return ret;
 	}
 
 	@GetMapping(path="/byEmail")

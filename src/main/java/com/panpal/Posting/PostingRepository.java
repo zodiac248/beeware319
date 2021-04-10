@@ -11,5 +11,7 @@ public interface PostingRepository extends CrudRepository<Posting, Integer> {
 
     Iterable<Posting> findByTopicOrderByDateDesc(Topic topic);
 
+    Iterable<Posting> findTop50ByTopicOrderByDateDesc(Topic topic);
+
     Iterable<Posting> findByEmailOrderByDateDesc(String email);
 }
