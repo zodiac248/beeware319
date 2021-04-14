@@ -55,13 +55,7 @@ public class BookingController {
 			String email = info.getEmail();
 			String date = info.getDate();
 
-			LocalDate dateObj = null;
-
-			try {
-				dateObj = LocalDate.parse(date);
-			} catch (DateTimeParseException e) {
-				e.printStackTrace();
-			}
+			LocalDate dateObj = LocalDate.parse(date);
 
             Booking n = new Booking();
             n.setDesk(desk);
@@ -86,15 +80,6 @@ public class BookingController {
 			String email = info.getEmail();
 			String date = info.getDate();
 
-			LocalDate dateObj = null;
-			if (date != null) {
-				try {
-					dateObj = LocalDate.parse(date);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-
 			Booking n = bookingRepository.findBookingById(id);
 
 			if (n == null) {
@@ -112,6 +97,7 @@ public class BookingController {
 				n.setEmail(email);
 			}
 			if (date != null) {
+				LocalDate dateObj = LocalDate.parse(date);
 				n.setDate(dateObj);
 			}
 			try{

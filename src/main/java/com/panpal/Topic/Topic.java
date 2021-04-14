@@ -19,6 +19,7 @@ public class Topic {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(columnDefinition = "varchar(50) default ''")
 	private String name;
 
 	@OneToMany(mappedBy="topic", cascade=CascadeType.REMOVE)

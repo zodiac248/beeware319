@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.panpal.RequestInfo;
 import com.panpal.User.User;
 
+import com.panpal.Error.TopicNoLongerExistsException;
+
 @CrossOrigin(origins = "https://beeware319-front.herokuapp.com")
 @RestController
 @RequestMapping(path="/topic")
@@ -61,12 +63,12 @@ public class TopicController {
 	}
 
 	@PutMapping
-	public String updateTopic (@RequestBody RequestInfo info) {
+	public ResponseEntity<String> updateTopic (@RequestBody RequestInfo info) {
 
 		Topic n = topicRepository.findTopicById(info.getId());
 		
 		if (n == null) {
-			return "Topic does not exist";
+			return resultController.handleError(new TopicNoLongerExistsException());
 		}
 		
 		String name = info.getName();
@@ -81,15 +83,15 @@ public class TopicController {
 				DataIntegrityViolationException a = (DataIntegrityViolationException) e;
 				String reason = a.getRootCause().getMessage();
 				if (reason.contains("Data too long")) {
-					throw new InputTooLongException();
+					return resultController.handleError(new InputTooLongException());
 				} else if (reason.contains("Duplicate")) {
-					throw new DuplicateTopicException("the topic with the same name already exists");
+					return resultController.handleError(new DuplicateTopicException("the topic with the same name already exists"));
 				}else {
-					throw e;
+					return resultController.handleError(e);
 				}
-
-			}}
-		return "Topic Updated";
+			}
+        }  
+		return resultController.handleSuccess("Comment Updated");
 	}
 
 	@DeleteMapping

@@ -6,9 +6,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL55Dialect
+    properties: 
+        hibernate:
+            dialect: org.hibernate.dialect.MySQL55Dialect 
   datasource:
     url: jdbc:mysql://us-cdbr-east-03.cleardb.com:3306/heroku_ca43daed6cbe877
     username: b316566d750994

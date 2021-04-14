@@ -18,6 +18,7 @@ public class Desk {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(columnDefinition = "varchar(50) default ''")
 	private String deskNumber;
 
 	@ManyToOne

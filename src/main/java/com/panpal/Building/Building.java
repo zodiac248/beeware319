@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 import com.panpal.Floor.Floor;
+import com.panpal.Mail.Mail;
 
 @Entity // This tells Hibernate to make a table out of this class
 @Table(
@@ -19,14 +20,20 @@ public class Building {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(columnDefinition = "varchar(50) default ''")
 	private String name;
-
+    
+	@Column(columnDefinition = "varchar(50) default ''")
 	private String address;
 
+	@Column(columnDefinition = "varchar(50) default ''")
 	private String code;
 
 	@OneToMany(mappedBy="building", cascade=CascadeType.REMOVE)
 	private List<Floor> floors;
+
+    @OneToMany(mappedBy="building", cascade=CascadeType.REMOVE)
+    private List<Mail> mails;
 
 	public Integer getId() {
 		return id;

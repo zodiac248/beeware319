@@ -22,6 +22,7 @@ public class Posting {
 
 	private LocalDateTime date;
 
+	@Column(columnDefinition = "varchar(50) default ''")
 	private String title;
 
 	private Integer likes;

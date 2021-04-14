@@ -1,6 +1,8 @@
 package com.panpal.Mail;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -20,18 +22,18 @@ public class Mail {
 
 	private String email;
 
-	@OneToOne
-	private Request request;
-
 	private String sender;
 
 	private LocalDateTime date;
 
+	private String status;
+    
 	@ManyToOne
 	private Building building;
 
-	private String status;
-
+    @OneToOne(mappedBy= "mail", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    private Request request;
+    
 	public Integer getId() {
 		return id;
 	}
@@ -44,17 +46,17 @@ public class Mail {
 		this.email = email;
 	}
 
-	public Request getRequest() {
-		return request;
-	}
+    public Request getRequest() {
+        return request;
+    }
 
-	public Integer getRequestId() {
-		return request.getId();
-	}
+    public Integer getRequestId() {
+        return request.getId();
+    }
 
-	public void setRequest(Request request) {
-		this.request = request;
-	}
+    public void setRequest(Request request) {
+        this.request = request;
+    }
 
 	public Building getBuilding() {
 		return building;

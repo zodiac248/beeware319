@@ -51,7 +51,7 @@ public class PostingController {
 			LocalDateTime dateObj = LocalDateTime.now();
 			String title = info.getTitle();
 			String content = info.getContent();
-			if (content.length()>=1024 || title.length()>1024) {
+			if (content.length() > 1024 || title.length() > 1024) {
 				throw new InputTooLongException();
 			}
 
@@ -68,7 +68,7 @@ public class PostingController {
 			while (subsIterator.hasNext()) {
 				Subscription sub = subsIterator.next();
 				String subEmail = sub.getEmail();
-				if (subEmail == email) {
+				if (subEmail.equals(email)) {
 					continue;
 				}
 				Notification note = new Notification();

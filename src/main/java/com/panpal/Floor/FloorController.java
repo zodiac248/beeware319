@@ -23,6 +23,7 @@ import com.panpal.Booking.BookingRepository;
 import com.panpal.Booking.Booking;
 import com.panpal.Building.BuildingRepository;
 import com.panpal.Building.Building;
+import org.hibernate.exception.DataException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +62,12 @@ public class FloorController {
 			Integer floorNumber = info.getFloorNumber();
 			Integer buildingId = info.getBuildingId();
 			Building building = buildingRepository.findBuildingById(buildingId);
+			String deskNumbers = info.getDeskNumbers();
+			String image = info.getImage();
+
 			if (building == null) {
 				throw new BuildingNoLongerExistsException("Building with id=" + buildingId + " does not exist");
 			}
-			String deskNumbers = info.getDeskNumbers();
-			String image = info.getImage();
 
 			Floor n = new Floor();
 			n.setFloorNumber(floorNumber);
@@ -191,15 +193,33 @@ public class FloorController {
 					}
 				}
 
+                Exception e_tmp = null;
 				for (int i=0; i < desks.size(); i++) {
 					if (desks.get(i) != null) {
 						Desk d = new Desk();
 						d.setDeskNumber(desks.get(i));
 						d.setFloor(n);
-						deskRepository.save(d);
-					}
+                        try {
+                            deskRepository.save(d);
+                        } catch (Exception e) {
+                            e_tmp = e;
+                        }
+	 				}
 				}
-			}
+
+                if (e_tmp != null){
+                    if (e_tmp instanceof DataIntegrityViolationException){
+                        DataIntegrityViolationException a = (DataIntegrityViolationException) e_tmp;
+                        String reason = a.getRootCause().getMessage();
+                        if (reason.contains("Data too long")) {
+                            throw new InputTooLongException();
+                        } else {
+                            throw e_tmp;
+                        }
+
+                    }
+                }
+			} 
 
 			return resultController.handleSuccess("Floor Updated");
 		} catch (Exception e) {
