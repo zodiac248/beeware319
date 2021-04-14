@@ -5,8 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import java.util.Date;
-
 public class RequestInfo {
 
 	private Integer id;
@@ -38,6 +36,51 @@ public class RequestInfo {
 	private String lastName;
 	
 	private Boolean isAdmin;
+
+	private String email;
+
+	private String password;
+
+	private Integer range;
+
+	private String imageUrl;
+
+	private Integer topicId;
+
+	private Integer subscriptionId;
+
+	private Integer commentId;
+
+	private Integer postingId;
+
+	private String title;
+
+	private Integer likes;
+
+	private String content;
+	
+	private String code;
+
+	private Integer mailId;
+
+	private Integer requestId;
+
+	private String sender;
+
+	private String status;
+
+	private String instructionType;
+
+	private String instructionDescription;
+
+	private String requestedCompletionDate;
+
+	private String feedback;
+
+	private String image;
+
+	private String type;
+
 
 	public Integer getId() {
 		return id;
@@ -98,4 +141,93 @@ public class RequestInfo {
 	public Boolean getIsAdmin() {
 		return isAdmin;
 	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public Integer getRange() {
+		return range;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public Integer getTopicId() {
+		return topicId;
+	}
+
+	public Integer getPostingId() {
+		return postingId;
+	}
+
+	public Integer getSubscriptionId() {
+		return subscriptionId;
+	}
+	
+	public Integer getCommentId() {
+		return commentId;
+	}
+
+	public String getTitle() {
+		return title;
+	}
+
+	public Integer getLikes() {
+		return likes;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public Integer getMailId() {
+		return mailId;
+	}
+
+	public Integer getRequestId() {
+		return requestId;
+	}
+
+	public String getSender() {
+		return sender;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public String getInstructionType() {
+		return instructionType;
+	}
+
+	public String getInstructionDescription() {
+		return instructionDescription;
+	}
+
+	public String getRequestedCompletionDate() {
+		return requestedCompletionDate;
+	}
+
+	public String getFeedback() {
+		return feedback;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public String getType() {
+		return type;
+	}
 }
+
